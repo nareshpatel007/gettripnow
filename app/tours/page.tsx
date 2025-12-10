@@ -1,0 +1,89 @@
+import { Header } from "@/components/header"
+import { TourFilters } from "@/components/tour-filters"
+import { TourListingGrid } from "@/components/tour-listing-grid"
+import { Pagination } from "@/components/pagination"
+import { TopAttractions } from "@/components/top-attractions"
+import { RecentlyViewed } from "@/components/recently-viewed"
+import { PeopleAlsoAsk } from "@/components/people-also-ask"
+import { Footer } from "@/components/footer"
+
+export default function ToursPage() {
+    return (
+        <div className="min-h-screen bg-white">
+            <Header />
+
+            {/* Breadcrumb - responsive */}
+            <div className="max-w-7xl mx-auto px-4 md:px-8 py-2 md:py-3">
+                <nav className="text-xs md:text-sm text-gray-500 overflow-x-auto whitespace-nowrap">
+                    <span className="hover:underline cursor-pointer">Home</span>
+                    <span className="mx-1 md:mx-2">/</span>
+                    <span className="hover:underline cursor-pointer">Things to do in Cayman Islands</span>
+                    <span className="mx-1 md:mx-2">/</span>
+                    <span className="text-gray-700">Cayman Islands Tours</span>
+                </nav>
+            </div>
+
+            {/* Page Title - responsive */}
+            <div className="max-w-7xl mx-auto px-4 md:px-8 pb-3 md:pb-4">
+                <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">
+                    All Cayman Islands Tours & Excursions in 2026
+                </h1>
+            </div>
+
+            <TourFilters />
+            <TourListingGrid />
+            <Pagination />
+            <TopAttractions />
+
+            {/* Feedback Section - responsive */}
+            <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-8 flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4">
+                <span className="text-xs md:text-sm text-gray-600">Were these results helpful?</span>
+                <div className="flex gap-2">
+                    <button className="p-2 hover:bg-gray-100 rounded-full">
+                        <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
+                            />
+                        </svg>
+                    </button>
+                    <button className="p-2 hover:bg-gray-100 rounded-full">
+                        <svg
+                            className="w-4 h-4 md:w-5 md:h-5 text-gray-500 rotate-180"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
+                            />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            {/* <RecentlyViewed /> */}
+
+            {/* SEO Description - responsive */}
+            <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-8">
+                <p className="text-xs md:text-sm text-gray-600 leading-relaxed">
+                    The Cayman Islands are known for white-sand beaches and world-class diving—and for good reason, as they're
+                    home to some of the most pristine coral reefs in the Caribbean. Most Cayman Island tours are focused on the
+                    water, featuring activities like snorkeling, boat trips, and visiting the popular Stingray City. But these
+                    tours can also help you explore more of the island, from its gourmet culinary scene to its mangrove-dense
+                    nature parks. Best of all, many tours are designed as shore excursions, making it easy to tuck a new
+                    experience into your itinerary.
+                </p>
+            </div>
+
+            <PeopleAlsoAsk />
+
+            <Footer />
+        </div>
+    )
+}
