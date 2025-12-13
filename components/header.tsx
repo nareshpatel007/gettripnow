@@ -83,7 +83,7 @@ export function Header() {
                         <Link href="/" className="flex items-center gap-1">
                             <svg viewBox="0 0 100 24" className="h-6 md:h-7 w-auto" fill="none">
                                 <text x="0" y="18" className="text-xl font-bold" fill="#2D2D2D">
-                                    GetTripNow
+                                    GoOneTravel
                                 </text>
                             </svg>
                         </Link>
@@ -94,7 +94,7 @@ export function Header() {
                             onMouseLeave={() => setIsDiscoverOpen(false)}
                         >
                             <button
-                                className="hidden md:flex items-center gap-1.5 text-base text-gray-700 hover:text-gray-900 py-2"
+                                className="hidden md:flex items-center gap-1.5 text-semibold text-gray-700 hover:text-gray-900 py-2"
                                 onClick={() => setIsDiscoverOpen(!isDiscoverOpen)}
                             >
                                 Discover
@@ -126,7 +126,7 @@ export function Header() {
                                             ))}
                                         </div>
                                         <div className="mt-8 pt-5 border-t border-gray-200">
-                                            <Link href="#" className="text-base text-[#007aff] font-medium hover:underline">
+                                            <Link href="#" className="text-base text-[#f53] font-medium hover:underline">
                                                 View all destinations →
                                             </Link>
                                         </div>
@@ -138,7 +138,7 @@ export function Header() {
 
                     {/* Search Bar with Suggestions Dropdown - Desktop */}
                     <div className="relative flex-1 max-w-md hidden md:block">
-                        <div className="bg-gray-100 rounded-full flex items-center gap-2 px-4 py-2">
+                        <div className="bg-gray-100 rounded-full flex items-center gap-2 px-4 py-2 border-1">
                             <Search className="h-5 w-5 text-gray-400" />
                             <input
                                 type="text"
@@ -200,7 +200,7 @@ export function Header() {
 
                         <Link href="/cart" className="p-2 md:p-2.5 hover:bg-gray-100 rounded-full relative cursor-pointer">
                             <ShoppingCart className="h-5 w-5 md:h-6 md:w-6 text-gray-700" />
-                            <span className="absolute -top-0.5 -right-0.5 bg-primary text-white text-xs font-medium rounded-full h-4 w-4 md:h-5 md:w-5 flex items-center justify-center text-[10px] md:text-xs">
+                            <span className="absolute -top-0.5 -right-0.5 bg-[#f53] text-white text-xs font-medium rounded-full h-4 w-4 md:h-5 md:w-5 flex items-center justify-center text-[10px] md:text-xs">
                                 0
                             </span>
                         </Link>
@@ -255,7 +255,7 @@ export function Header() {
 
                         <button
                             onClick={() => setIsPlanTripModalOpen(true)}
-                            className="hidden md:flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-full font-medium text-sm hover:bg-[#0071eb] transition-colors cursor-pointer"
+                            className="hidden md:flex items-center gap-2 px-4 py-2 bg-[#f53] text-white rounded-full font-medium text-sm hover:bg-[#1a2b49] transition-colors cursor-pointer"
                         >
                             <MapPin className="h-4 w-4" />
                             Plan Your Trip

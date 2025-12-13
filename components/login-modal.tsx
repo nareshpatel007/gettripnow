@@ -59,7 +59,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
                     </DialogHeader>
 
                     {/* Header */}
-                    <div className="relative bg-[#007aff] p-4 md:p-6 text-white">
+                    <div className="relative bg-[#1a2b49] p-4 md:p-6 text-white">
                         <button
                             onClick={() => onOpenChange(false)}
                             className="absolute top-3 right-3 md:top-4 md:right-4 p-1 hover:bg-white/20 rounded-full transition-colors cursor-pointer"
@@ -88,7 +88,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
                                         type="text"
                                         value={firstName}
                                         onChange={(e) => setFirstName(e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0071eb] focus:border-transparent outline-none transition-all text-sm"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a2b49] focus:border-transparent outline-none transition-all text-sm"
                                         placeholder="First name"
                                         required
                                     />
@@ -102,7 +102,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
                                         type="text"
                                         value={lastName}
                                         onChange={(e) => setLastName(e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0071eb] focus:border-transparent outline-none transition-all text-sm"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a2b49] focus:border-transparent outline-none transition-all text-sm"
                                         placeholder="Last name"
                                         required
                                     />
@@ -119,7 +119,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0071eb] focus:border-transparent outline-none transition-all text-sm"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a2b49] focus:border-transparent outline-none transition-all text-sm"
                                 placeholder="Enter your email"
                                 required
                             />
@@ -135,7 +135,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
                                     type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0071eb] focus:border-transparent outline-none transition-all text-sm pr-12"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a2b49] focus:border-transparent outline-none transition-all text-sm pr-12"
                                     placeholder="Enter your password"
                                     required
                                 />
@@ -151,7 +151,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
                         {!isSignUp && (
                             <div className="flex justify-end">
-                                <button type="button" onClick={handleForgotPassword} className="text-sm text-[#0071eb] hover:underline cursor-pointer">
+                                <button type="button" onClick={handleForgotPassword} className="text-sm text-[#1a2b49] hover:text-[#f53] font-medium hover:underline cursor-pointer">
                                     Forgot password?
                                 </button>
                             </div>
@@ -159,7 +159,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
                         <button
                             type="submit"
-                            className="w-full bg-[#007aff] text-white font-semibold py-3 rounded-lg hover:bg-[#0071eb] transition-colors cursor-pointer"
+                            className="w-full bg-[#1a2b49] text-white font-semibold py-3 rounded-lg hover:bg-[#1a2b49]/90 transition-colors cursor-pointer"
                         >
                             {isSignUp ? "Create account" : "Log in"}
                         </button>
@@ -214,7 +214,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
                         {/* Toggle Sign Up / Log In */}
                         <p className="text-center text-sm text-gray-600 pt-2">
                             {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
-                            <button type="button" onClick={toggleMode} className="text-[#0071eb] font-medium hover:underline cursor-pointer">
+                            <button type="button" onClick={toggleMode} className="text-[#1a2b49] hover:text-[#f53] font-medium hover:underline cursor-pointer">
                                 {isSignUp ? "Log in" : "Sign up"}
                             </button>
                         </p>

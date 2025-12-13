@@ -128,13 +128,9 @@
 }
 
 .bg-main {
-    background-color: #007aff;
+    background-color: #f53;
 }
 
 .bg-main-hover {
-    background-color: #0071eb;
-}
-
-.bg-main-orange {
-    background-color: #f53;
+    background-color: #1a2b49;
 }

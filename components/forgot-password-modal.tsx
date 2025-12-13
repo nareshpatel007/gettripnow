@@ -43,7 +43,7 @@ export function ForgotPasswordModal({ open, onOpenChange }: ForgotPasswordModalP
                 </DialogHeader>
 
                 {/* Header */}
-                <div className="relative bg-[#007aff] p-4 md:p-6 text-white">
+                <div className="relative bg-[#1a2b49] p-4 md:p-6 text-white">
                     <button
                         onClick={handleClose}
                         className="absolute top-3 right-3 md:top-4 md:right-4 p-1 hover:bg-white/20 rounded-full transition-colors cursor-pointer"
@@ -71,7 +71,7 @@ export function ForgotPasswordModal({ open, onOpenChange }: ForgotPasswordModalP
                                         type="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#007aff] focus:border-transparent outline-none transition-all text-sm"
+                                        className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a2b49] focus:border-transparent outline-none transition-all text-sm"
                                         placeholder="Enter your email"
                                         required
                                     />
@@ -81,7 +81,7 @@ export function ForgotPasswordModal({ open, onOpenChange }: ForgotPasswordModalP
 
                             <button
                                 type="submit"
-                                className="w-full bg-[#007aff] text-white font-semibold py-3 rounded-lg hover:bg-[#0071eb] transition-colors cursor-pointer"
+                                className="w-full bg-[#1a2b49] text-white font-semibold py-3 rounded-lg hover:bg-[#1a2b49]/90 transition-colors cursor-pointer"
                             >
                                 Send reset link
                             </button>
@@ -113,7 +113,7 @@ export function ForgotPasswordModal({ open, onOpenChange }: ForgotPasswordModalP
                             <button
                                 type="button"
                                 onClick={handleClose}
-                                className="w-full bg-[#007aff] text-white font-semibold py-3 rounded-lg hover:bg-[#0071eb] transition-colors"
+                                className="w-full bg-[#1a2b49] text-white font-semibold py-3 rounded-lg hover:bg-[#0071eb] transition-colors"
                             >
                                 Back to login
                             </button>
