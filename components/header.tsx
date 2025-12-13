@@ -115,7 +115,7 @@ export function Header() {
                                                             <li key={link.name}>
                                                                 <Link
                                                                     href={link.href}
-                                                                    className="text-base text-gray-600 hover:text-[#0071eb] transition-colors"
+                                                                    className="text-base text-gray-600 hover:text-[#f53] transition-colors"
                                                                 >
                                                                     {link.name}
                                                                 </Link>
@@ -289,9 +289,19 @@ export function Header() {
                                         setIsLoginModalOpen(true)
                                         setIsMobileMenuOpen(false)
                                     }}
-                                    className="w-full text-left px-4 py-3 bg-[#1a9cb0] text-white rounded-lg font-medium"
+                                    className="w-full text-left px-4 py-3 bg-[#f53] text-white rounded-lg font-medium"
                                 >
                                     Log in / Sign up
+                                </button>
+                            </div>
+
+                            <div className="space-y-2">
+                                <button
+                                    onClick={() => setIsPlanTripModalOpen(true)}
+                                    className="w-full flex items-center gap-2 text-left px-4 py-3 bg-[#f53] text-white rounded-lg font-medium"
+                                >
+                                    <MapPin className="h-4 w-4" />
+                                    Plan Your Trip
                                 </button>
                             </div>
 
@@ -299,7 +309,7 @@ export function Header() {
                             {megaMenuCategories.map((category) => (
                                 <div key={category.title}>
                                     <h3 className="font-semibold text-base text-gray-900 mb-3">{category.title}</h3>
-                                    <ul className="space-y-2">
+                                    <ul>
                                         {category.links.map((link) => (
                                             <li key={link.name}>
                                                 <Link
@@ -316,7 +326,7 @@ export function Header() {
                             ))}
 
                             {/* Additional Links */}
-                            <div className="border-t border-gray-200 pt-4 space-y-2">
+                            <div className="border-t border-gray-200 pt-4">
                                 <Link href="/wishlist" className="flex items-center gap-3 py-2 text-gray-700">
                                     <Heart className="h-5 w-5" />
                                     Wishlists
