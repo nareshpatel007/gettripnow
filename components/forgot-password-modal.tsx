@@ -32,7 +32,7 @@ export function ForgotPasswordModal({ open, onOpenChange }: ForgotPasswordModalP
     return (
         <Dialog open={open} onOpenChange={handleClose}>
             <DialogContent
-                className="w-full h-full sm:h-auto sm:max-w-[440px] p-0 gap-0 overflow-hidden sm:rounded-lg"
+                className="w-full sm:h-auto sm:max-w-[440px] p-0 gap-0 overflow-hidden sm:rounded-lg"
                 showCloseButton={false}
             >
                 <DialogHeader className="sr-only">

@@ -1,6 +1,6 @@
 "use client"
 
-import { Globe, ChevronDown, User, Search, Heart, ShoppingCart, Menu, X, MapPin } from "lucide-react"
+import { Globe, ChevronDown, User, Search, Heart, ShoppingCart, Menu, X, MapPin, Ticket, HelpCircle } from "lucide-react"
 import { useState } from "react"
 import Link from "next/link"
 import { LoginModal } from "./login-modal"
@@ -82,9 +82,7 @@ export function Header() {
 
                         <Link href="/" className="flex items-center gap-1">
                             <svg viewBox="0 0 100 24" className="h-6 md:h-7 w-auto" fill="none">
-                                <text x="0" y="18" className="text-xl font-bold" fill="#2D2D2D">
-                                    GoOneTravel
-                                </text>
+                                <text x="0" y="18" className="text-xl font-bold" fill="#2D2D2D">GoOneTravel</text>
                             </svg>
                         </Link>
 
@@ -234,7 +232,7 @@ export function Header() {
                                         href="/bookings"
                                         className="block px-5 py-2.5 text-base text-gray-700 hover:bg-gray-50 transition-colors"
                                     >
-                                        Manage bookings
+                                        My bookings
                                     </Link>
                                     <Link
                                         href="/wishlist"
@@ -327,11 +325,16 @@ export function Header() {
 
                             {/* Additional Links */}
                             <div className="border-t border-gray-200 pt-4">
+                                <Link href="/bookings" className="flex items-center gap-3 py-2 text-gray-700">
+                                    <Ticket className="h-5 w-5" />
+                                    My Bookings
+                                </Link>
                                 <Link href="/wishlist" className="flex items-center gap-3 py-2 text-gray-700">
                                     <Heart className="h-5 w-5" />
                                     Wishlists
                                 </Link>
-                                <Link href="/contact" className="block py-2 text-gray-700">
+                                <Link href="/contact" className="flex items-center gap-3 py-2 text-gray-700">
+                                    <HelpCircle className="h-5 w-5" />
                                     Help Center
                                 </Link>
                             </div>
