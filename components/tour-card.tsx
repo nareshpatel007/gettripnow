@@ -37,7 +37,6 @@ export function TourCard({
                         alt={title}
                         className="w-full h-36 sm:h-44 md:h-52 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#FF6F4A]" />
                     <div className="absolute top-2 md:top-3 left-2 md:left-3 flex items-center gap-1 md:gap-1.5 bg-white/95 backdrop-blur-sm px-1.5 md:px-2 py-0.5 md:py-1 rounded-full">
                         <span className="w-4 h-4 md:w-5 md:h-5 bg-[#f53] rounded-full flex items-center justify-center text-white text-[10px] md:text-xs font-bold">G</span>
                         <span className="text-[10px] md:text-xs text-gray-700 font-medium hidden sm:inline">Exclusive</span>
@@ -50,7 +49,7 @@ export function TourCard({
                     {tourType && (
                         <p className="text-[10px] md:text-xs font-semibold text-gray-500 uppercase tracking-wide">{tourType}</p>
                     )}
-                    <h4 className="text-sm md:text-base font-semibold text-gray-900 line-clamp-2 leading-snug">{title}</h4>
+                    <h4 className="text-sm md:text-base font-semibold text-[#1a2b49] line-clamp-2 leading-snug">{title}</h4>
                     {(extraInfo || duration) && (
                         <p className="text-xs md:text-sm text-gray-500">{extraInfo ? extraInfo : duration}</p>
                     )}

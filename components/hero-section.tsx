@@ -71,7 +71,7 @@ export function HeroSection() {
                                 onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                             />
                         </div>
-                        <button className="bg-[#007aff] hover:bg-[#0071eb] text-white p-3 rounded-lg cursor-pointer">
+                        <button className="bg-[#f53] hover:bg-[#1a2b49] text-white p-3 rounded-lg cursor-pointer">
                             <Search className="h-6 w-6" />
                         </button>
                     </div>
@@ -79,7 +79,7 @@ export function HeroSection() {
                     {showSuggestions && (
                         <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden z-50">
                             <div className="p-3 border-b border-gray-100">
-                                <span className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                                <span className="text-xs font-semibold text-[#1a2b49] uppercase tracking-wide">
                                     Popular Destinations
                                 </span>
                             </div>
