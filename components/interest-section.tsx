@@ -38,7 +38,7 @@ const interestTours = [
 
 export function InterestSection() {
     return (
-        <section className="py-8 md:py-10 px-4 md:px-8">
+        <section className="max-w-7xl mx-auto py-8 md:py-10 px-4 md:px-8">
             <h2 className="text-lg md:text-2xl font-semibold text-center text-[#1a2b49] mb-6 md:mb-8">
                 Based on your interest in George Town
             </h2>

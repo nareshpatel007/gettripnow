@@ -15,26 +15,24 @@ const destinations = [
 
 export function TopDestinations() {
     return (
-        <section className="py-10 px-4 md:px-8">
-            <div className="max-w-7xl mx-auto">
-                <h2 className="text-2xl font-semibold text-center text-[#1a2b49] mb-8">Top Destinations</h2>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                    {destinations.map((dest) => (
-                        <Link href={`/destinations/${dest.name}`} key={dest.name}>
-                            <div className="relative rounded-lg overflow-hidden cursor-pointer group h-28">
-                                <img
-                                    src={dest.image || "/placeholder.svg"}
-                                    alt={dest.name}
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                />
-                                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
-                                <span className="absolute inset-0 flex items-center justify-center text-white font-semibold text-sm md:text-base">
-                                    {dest.name}
-                                </span>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
+        <section className="max-w-7xl mx-auto py-10 px-4 md:px-8">
+            <h2 className="text-2xl font-semibold text-center text-[#1a2b49] mb-8">Top Destinations</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                {destinations.map((dest) => (
+                    <Link href={`/destinations/${dest.name}`} key={dest.name}>
+                        <div className="relative rounded-lg overflow-hidden cursor-pointer group h-28">
+                            <img
+                                src={dest.image || "/placeholder.svg"}
+                                alt={dest.name}
+                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                            />
+                            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
+                            <span className="absolute inset-0 flex items-center justify-center text-white font-semibold text-sm md:text-base">
+                                {dest.name}
+                            </span>
+                        </div>
+                    </Link>
+                ))}
             </div>
         </section>
     )

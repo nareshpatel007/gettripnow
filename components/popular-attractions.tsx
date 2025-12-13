@@ -21,8 +21,8 @@ const attractions = [
 
 export function PopularAttractions() {
     return (
-        <section className="py-8 px-4 md:px-8 border-t border-gray-200">
-            <div className="max-w-7xl mx-auto text-center">
+        <section className="max-w-7xl mx-auto px-4 md:px-8">
+            <div className="text-center py-8 border-t border-gray-200">
                 <h3 className="font-semibold text-2xl text-[#1a2b49] mb-6">Popular Attractions</h3>
                 <div className="flex flex-wrap gap-3">
                     {attractions.map((attraction, index) => (

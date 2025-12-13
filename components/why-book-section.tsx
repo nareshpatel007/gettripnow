@@ -25,7 +25,7 @@ const features = [
 
 export function WhyBookSection() {
     return (
-        <section className="py-8 md:py-12 px-4 md:px-8">
+        <section className="max-w-7xl mx-auto md:py-12 px-4 md:px-8">
             <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-center text-[#1a2b49] mb-6 md:mb-10">
                 Why book with Get Trip Now?
             </h2>

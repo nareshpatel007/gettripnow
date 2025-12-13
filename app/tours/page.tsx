@@ -25,7 +25,7 @@ export default function ToursPage() {
 
             {/* Page Title - responsive */}
             <div className="max-w-7xl mx-auto px-4 md:px-8 pb-3 md:pb-4">
-                <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">
+                <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-[#1a2b49]">
                     All Cayman Islands Tours & Excursions in 2026
                 </h1>
             </div>
@@ -40,7 +40,7 @@ export default function ToursPage() {
                 <span className="text-xs md:text-sm text-gray-600">Were these results helpful?</span>
                 <div className="flex gap-2">
                     <button className="p-2 hover:bg-gray-100 rounded-full">
-                        <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-500 hover:text-[#f53] cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -51,7 +51,7 @@ export default function ToursPage() {
                     </button>
                     <button className="p-2 hover:bg-gray-100 rounded-full">
                         <svg
-                            className="w-4 h-4 md:w-5 md:h-5 text-gray-500 rotate-180"
+                            className="w-4 h-4 md:w-5 md:h-5 text-gray-500 rotate-180 hover:text-[#f53] cursor-pointer"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -66,11 +66,7 @@ export default function ToursPage() {
                     </button>
                 </div>
             </div>
-
-            {/* <RecentlyViewed /> */}
-
-            {/* SEO Description - responsive */}
-            <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-8">
+            <div className="max-w-7xl mx-auto md:px-8 py-2 md:py-2">
                 <p className="text-xs md:text-sm text-gray-600 leading-relaxed">
                     The Cayman Islands are known for white-sand beaches and world-class diving—and for good reason, as they're
                     home to some of the most pristine coral reefs in the Caribbean. Most Cayman Island tours are focused on the

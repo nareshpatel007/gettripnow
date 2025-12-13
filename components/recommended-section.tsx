@@ -112,41 +112,39 @@ export function RecommendedSection() {
     }
 
     return (
-        <section className="py-8 md:py-12 px-4 md:px-8">
-            <div className="max-w-7xl mx-auto">
-                <div className="flex items-center justify-between mb-6 md:mb-8">
-                    <h2 className="text-lg md:text-2xl lg:text-3xl font-bold text-[#1a2b49]">Unforgettable travel experiences</h2>
-                    <div className="flex gap-2">
-                        <button
-                            onClick={() => scroll("left")}
-                            disabled={!canScrollLeft}
-                            className="p-2 rounded-full border border-[#f53] text-[#F53] hover:bg-[#f53] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
-                            aria-label="Scroll left"
-                        >
-                            <ChevronLeft className="w-5 h-5" />
-                        </button>
-                        <button
-                            onClick={() => scroll("right")}
-                            disabled={!canScrollRight}
-                            className="p-2 rounded-full border border-[#f53] text-[#F53] hover:bg-[#f53] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
-                            aria-label="Scroll right"
-                        >
-                            <ChevronRight className="w-5 h-5" />
-                        </button>
+        <section className="max-w-7xl mx-auto py-8 md:py-12 px-4 md:px-8">
+            <div className="flex items-center justify-between mb-6 md:mb-8">
+                <h2 className="text-lg md:text-2xl lg:text-3xl font-bold text-[#1a2b49]">Unforgettable travel experiences</h2>
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => scroll("left")}
+                        disabled={!canScrollLeft}
+                        className="p-2 rounded-full border border-[#f53] text-[#F53] hover:bg-[#f53] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                        aria-label="Scroll left"
+                    >
+                        <ChevronLeft className="w-5 h-5" />
+                    </button>
+                    <button
+                        onClick={() => scroll("right")}
+                        disabled={!canScrollRight}
+                        className="p-2 rounded-full border border-[#f53] text-[#F53] hover:bg-[#f53] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                        aria-label="Scroll right"
+                    >
+                        <ChevronRight className="w-5 h-5" />
+                    </button>
+                </div>
+            </div>
+            <div
+                ref={scrollContainerRef}
+                onScroll={checkScrollPosition}
+                className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+                {recommendedTours.map((tour, index) => (
+                    <div key={`${tour.title}-${index}`} className="flex-shrink-0 w-[280px] md:w-[300px]">
+                        <TourCard {...tour} />
                     </div>
-                </div>
-                <div
-                    ref={scrollContainerRef}
-                    onScroll={checkScrollPosition}
-                    className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
-                    style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-                >
-                    {recommendedTours.map((tour, index) => (
-                        <div key={`${tour.title}-${index}`} className="flex-shrink-0 w-[280px] md:w-[300px]">
-                            <TourCard {...tour} />
-                        </div>
-                    ))}
-                </div>
+                ))}
             </div>
         </section>
     )
