@@ -1,12 +1,24 @@
+import { Loader2 } from "lucide-react"
+
 // Define props
 type Props = {
+    initLoading: boolean
     tourList: any
 }
 
-export function TourNotFound({ tourList }: Props) {
+export function TourNotFound({ initLoading, tourList }: Props) {
     return (
         <>
-            {tourList && tourList.length === 0 && (
+            {initLoading && (
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f53]/10 border border-[#f53]/40">
+                        <Loader2 className="h-8 w-8 text-[#f53] animate-spin" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-800">Loading results...</h3>
+                </div>
+            )}
+
+            {!initLoading && tourList && tourList.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-16 text-center">
                     <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f53]/10 border border-[#f53]/40">
                         <svg

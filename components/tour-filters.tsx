@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 // Define props
 interface TourFiltersProps {
+    initLoading: boolean;
     isLoading: boolean;
     totalCount: string;
     sortFilter: string;
@@ -13,7 +14,7 @@ interface TourFiltersProps {
     setCurrentPage: (page: number) => void;
 }
 
-export function TourFilters({ isLoading, totalCount, sortFilter, setSortFilter, setCurrentPage }: TourFiltersProps) {
+export function TourFilters({ initLoading, isLoading, totalCount, sortFilter, setSortFilter, setCurrentPage }: TourFiltersProps) {
     // Define state
     const [isOpen, setIsOpen] = useState(false);
     const [expandedSections, setExpandedSections] = useState<string[]>(["languages", "duration", "price"]);
@@ -88,7 +89,9 @@ export function TourFilters({ isLoading, totalCount, sortFilter, setSortFilter, 
         <div className="border-b border-gray-200">
             <div className="max-w-7xl mx-auto px-4 md:px-8 py-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
-                    <p className="text-sm text-gray-600">{totalCount}+ results</p>
+                    <p className="text-sm text-gray-600">
+                        {!initLoading ? `${totalCount}+ results` : ""}
+                    </p>
                     <div className="flex items-center gap-3">
                         {isLoading && <Loader2 className="animate-spin h-5 w-5 text-gray-600" />}
                         <Sheet open={isOpen} onOpenChange={setIsOpen}>

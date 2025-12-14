@@ -1,3 +1,4 @@
+import { formatPrice } from "@/lib/utils"
 import { BadgeCheckIcon, Check, Heart, Star } from "lucide-react"
 import Link from "next/link"
 
@@ -68,9 +69,9 @@ export function TourCard({
                 {duration_format && (
                     <p className="text-xs md:text-sm text-gray-500">{duration_format}</p>
                 )}
-                {/* {is_refundable == true && <span className="inline-block bg-[#f53] text-white text-[10px] md:text-xs font-semibold px-2 md:px-2.5 py-0.5 md:py-1 rounded">
-                        Free Cancellation
-                    </span>} */}
+                {selling_price && discount_price != selling_price && <span className="inline-block bg-[#f53] text-white text-[10px] md:text-xs font-semibold px-2 md:px-2.5 py-0.5 md:py-1 rounded">
+                        Special Offer
+                    </span>}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 pt-1">
                     <div className="flex items-center gap-1">
                         {average_rating > 0 && <>
@@ -81,9 +82,9 @@ export function TourCard({
                     </div>
                     <div className="text-left sm:text-right">
                         <span className="text-[10px] md:text-xs text-gray-500">From </span>
-                        <span className="font-bold text-sm md:text-base text-gray-900">${discount_price}</span>
+                        <span className="font-bold text-sm md:text-base text-gray-900">${formatPrice(discount_price)}</span>
                         {selling_price && discount_price != selling_price && (
-                            <span className="text-xs md:text-sm text-gray-400 line-through ml-1">${selling_price}</span>
+                            <span className="text-xs md:text-sm text-gray-400 line-through ml-1">${formatPrice(selling_price)}</span>
                         )}
                     </div>
                 </div>

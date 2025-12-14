@@ -1,14 +1,14 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { Header } from "@/components/header"
-import { TourFilters } from "@/components/tour-filters"
-import { TourListingGrid } from "@/components/tour-listing-grid"
-import { Pagination } from "@/components/pagination"
-import { TopAttractions } from "@/components/top-attractions"
-import { PeopleAlsoAsk } from "@/components/people-also-ask"
-import { Footer } from "@/components/footer"
-import { HelpfulBanner } from "@/components/helpful-banner"
+import { useEffect, useState } from "react";
+import { Header } from "@/components/header";
+import { TourFilters } from "@/components/tour-filters";
+import { TourListingGrid } from "@/components/tour-listing-grid";
+import { Pagination } from "@/components/pagination";
+import { TopAttractions } from "@/components/top-attractions";
+import { PeopleAlsoAsk } from "@/components/people-also-ask";
+import { Footer } from "@/components/footer";
+import { HelpfulBanner } from "@/components/helpful-banner";
 
 export default function ToursPage() {
     // Define state
@@ -17,7 +17,8 @@ export default function ToursPage() {
     const [totalPages, setTotalPages] = useState<any>(0);
     const [totalCount, setTotalCount] = useState<any>(0);
     const [sortFilter, setSortFilter] = useState<string>('traveler_rating');
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+    const [initLoading, setInitLoading] = useState(true);
     const [refreshContent, setRefreshContent] = useState(false);
 
     // Fetch data
@@ -25,8 +26,6 @@ export default function ToursPage() {
         const controller = new AbortController();
         const fetchTours = async () => {
             try {
-                setIsLoading(true);
-
                 // Fetch the data
                 const response = await fetch("/api/tours", {
                     method: "POST",
@@ -59,6 +58,7 @@ export default function ToursPage() {
             } finally {
                 setIsLoading(false);
                 setRefreshContent(false);
+                setInitLoading(false);
             }
         };
         fetchTours();
@@ -84,13 +84,17 @@ export default function ToursPage() {
             </div>
 
             <TourFilters
+                initLoading={initLoading}
                 isLoading={isLoading}
                 totalCount={totalCount}
                 sortFilter={sortFilter}
                 setSortFilter={setSortFilter}
                 setCurrentPage={setCurrentPage}
             />
-            <TourListingGrid tourList={tourList} />
+            <TourListingGrid
+                initLoading={initLoading}
+                tourList={tourList}
+            />
             <Pagination
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
