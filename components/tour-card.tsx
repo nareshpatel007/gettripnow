@@ -40,24 +40,24 @@ export function TourCard({
 }: TourCardProps) {
     return (
         <div className="group">
-            <Link href={`/tours/${slug}`}>
-                <div className="relative rounded-xl overflow-hidden mb-2 md:mb-3">
+            <div className="relative rounded-xl overflow-hidden mb-2 md:mb-3">
+                <Link href={`/tours/${slug}`}>
                     <img
                         src={featured_image || "/placeholder.svg"}
                         alt={name}
                         className="w-full h-36 sm:h-44 md:h-52 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    {is_refundable == true && <div className="absolute top-2 md:top-3 left-2 md:left-3 flex items-center gap-1 md:gap-1.5 bg-white/95 backdrop-blur-sm px-1.5 md:px-2 py-0.5 md:py-1 rounded-full">
-                        <span className="w-4 h-4 md:w-5 md:h-5 bg-[#f53] rounded-full flex items-center justify-center text-white text-[10px] md:text-xs font-bold">
-                            <BadgeCheckIcon className="w-3 h-3 md:w-4 md:h-4" />
-                        </span>
-                        <span className="text-[10px] md:text-xs text-gray-700 font-medium hidden sm:inline">Free Cancellation</span>
-                    </div>}
-                    <button className="absolute top-2 md:top-3 right-2 md:right-3 p-1.5 md:p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors cursor-pointer">
-                        <Heart className="h-4 w-4 md:h-5 md:w-5 text-gray-600 hover:text-[#f53]" />
-                    </button>
-                </div>
-            </Link>
+                </Link>
+                {is_refundable == true && <div className="absolute top-2 md:top-3 left-2 md:left-3 flex items-center gap-1 md:gap-1.5 bg-white/95 backdrop-blur-sm px-1.5 md:px-2 py-0.5 md:py-1 rounded-full">
+                    <span className="w-4 h-4 md:w-5 md:h-5 bg-[#f53] rounded-full flex items-center justify-center text-white text-[10px] md:text-xs font-bold">
+                        <BadgeCheckIcon className="w-3 h-3 md:w-4 md:h-4" />
+                    </span>
+                    <span className="text-[10px] md:text-xs text-gray-700 font-medium hidden sm:inline">Free Cancellation</span>
+                </div>}
+                <button className="absolute top-2 md:top-3 right-2 md:right-3 p-1.5 md:p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors cursor-pointer">
+                    <Heart className="h-4 w-4 md:h-5 md:w-5 text-gray-600 hover:text-[#f53]" />
+                </button>
+            </div>
             <div className="space-y-1 md:space-y-1.5">
                 {tag_name && (
                     <p className="text-[10px] md:text-xs font-semibold text-gray-500 uppercase tracking-wide">{tag_name}</p>
