@@ -1,24 +1,34 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import { SlidersHorizontal, X, ChevronDown } from "lucide-react"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { useState, useRef, useEffect } from "react";
+import { SlidersHorizontal, X, ChevronDown, Loader2 } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-export function TourFilters() {
-    const [isOpen, setIsOpen] = useState(false)
-    const [expandedSections, setExpandedSections] = useState<string[]>(["languages", "duration", "price"])
-    const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null)
-    const [selectedDurations, setSelectedDurations] = useState<string[]>([])
-    const [priceMin, setPriceMin] = useState("")
-    const [priceMax, setPriceMax] = useState("")
-    const [showAllLanguages, setShowAllLanguages] = useState(false)
-    const [sortDropdownOpen, setSortDropdownOpen] = useState(false)
-    const [selectedSort, setSelectedSort] = useState("Traveler Rating")
-    const sortDropdownRef = useRef<HTMLDivElement>(null)
+// Define props
+interface TourFiltersProps {
+    isLoading: boolean;
+    totalCount: string;
+    sortFilter: string;
+    setSortFilter: (value: string) => void;
+    setCurrentPage: (page: number) => void;
+}
 
-    const languagesRef = useRef<HTMLDivElement>(null)
-    const durationRef = useRef<HTMLDivElement>(null)
-    const priceRef = useRef<HTMLDivElement>(null)
+export function TourFilters({ isLoading, totalCount, sortFilter, setSortFilter, setCurrentPage }: TourFiltersProps) {
+    // Define state
+    const [isOpen, setIsOpen] = useState(false);
+    const [expandedSections, setExpandedSections] = useState<string[]>(["languages", "duration", "price"]);
+    const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+    const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
+    const [priceMin, setPriceMin] = useState("");
+    const [priceMax, setPriceMax] = useState("");
+    const [sortDisplay, setSortDisplay] = useState("Traveler Rating");
+    const [showAllLanguages, setShowAllLanguages] = useState(false);
+    const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+    const sortDropdownRef = useRef<HTMLDivElement>(null);
+
+    const languagesRef = useRef<HTMLDivElement>(null);
+    const durationRef = useRef<HTMLDivElement>(null);
+    const priceRef = useRef<HTMLDivElement>(null);
 
     const categories = [
         { name: "Activities", count: 0 },
@@ -30,16 +40,18 @@ export function TourFilters() {
     const languages = ["English", "French", "German", "Italian", "Portuguese", "Spanish", "Japanese", "Chinese"]
     const displayedLanguages = showAllLanguages ? languages : languages.slice(0, 5)
 
+    // Define durations
     const durations = ["Up to 1 hour", "1 to 4 hours", "4 hours to 1 day", "1 day to 3 days", "More than 3 days"]
 
+    // Define sort options
     const sortOptions = [
-        "Traveler Rating",
-        "Price: Low to High",
-        "Price: High to Low",
-        "Duration: Short to Long",
-        "Duration: Long to Short",
-        "Newest First",
-    ]
+        { value: "traveler_rating", label: "Traveler Rating" },
+        { value: "price_low_to_high", label: "Price: Low to High" },
+        { value: "price_high_to_low", label: "Price: High to Low" },
+        { value: "duration_low_to_high", label: "Duration: Short to Long" },
+        { value: "duration_high_to_low", label: "Duration: Long to Short" },
+        { value: "newest_first", label: "Newest First" },
+    ];
 
     const toggleSection = (section: string) => {
         setExpandedSections((prev) => (prev.includes(section) ? prev.filter((s) => s !== section) : [...prev, section]))
@@ -54,7 +66,8 @@ export function TourFilters() {
         setSelectedDurations([])
         setPriceMin("")
         setPriceMax("")
-        setSelectedSort("Traveler Rating")
+        setSortFilter("traveler_rating");
+        setCurrentPage(1);
     }
 
     const handleApply = () => {
@@ -75,8 +88,9 @@ export function TourFilters() {
         <div className="border-b border-gray-200">
             <div className="max-w-7xl mx-auto px-4 md:px-8 py-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
-                    <p className="text-sm text-gray-600">165+ results</p>
+                    <p className="text-sm text-gray-600">{totalCount}+ results</p>
                     <div className="flex items-center gap-3">
+                        {isLoading && <Loader2 className="animate-spin h-5 w-5 text-gray-600" />}
                         <Sheet open={isOpen} onOpenChange={setIsOpen}>
                             <SheetTrigger asChild>
                                 <button className="flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 border border-gray-300 rounded-md hover:border-gray-400 transition-colors cursor-pointer">
@@ -242,7 +256,7 @@ export function TourFilters() {
                             >
                                 <span className="hidden sm:inline text-sm text-gray-600">Sort by:</span>
                                 <span className="text-xs sm:text-sm font-medium text-gray-900 max-w-[100px] sm:max-w-none truncate">
-                                    {selectedSort}
+                                    {sortDisplay}
                                 </span>
                                 <ChevronDown
                                     className={`h-4 w-4 transition-transform flex-shrink-0 ${sortDropdownOpen ? "rotate-180" : ""}`}
@@ -255,17 +269,19 @@ export function TourFilters() {
                                     <div className="py-1">
                                         {sortOptions.map((option) => (
                                             <button
-                                                key={option}
+                                                key={option?.value}
                                                 onClick={() => {
-                                                    setSelectedSort(option)
-                                                    setSortDropdownOpen(false)
+                                                    setSortFilter(option?.value);
+                                                    setSortDisplay(option?.label);
+                                                    setSortDropdownOpen(false);
+                                                    setCurrentPage(1);
                                                 }}
-                                                className={`w-full text-left px-4 py-2.5 text-sm transition-colors cursor-pointer ${selectedSort === option
-                                                        ? "bg-[#1a2b49]/5 text-[#1a2b49] font-medium"
-                                                        : "text-gray-700 hover:bg-gray-50"
+                                                className={`w-full text-left px-4 py-2.5 text-sm transition-colors cursor-pointer ${sortFilter === option?.value
+                                                    ? "bg-[#1a2b49]/5 text-[#1a2b49] font-medium"
+                                                    : "text-gray-700 hover:bg-gray-50"
                                                     }`}
                                             >
-                                                {option}
+                                                {option?.label}
                                             </button>
                                         ))}
                                     </div>
