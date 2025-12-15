@@ -12,20 +12,35 @@ import { HelpfulBanner } from "@/components/helpful-banner";
 
 export default function ToursPage() {
     // Define state
+    const [isLoading, setIsLoading] = useState(false);
+    const [initLoading, setInitLoading] = useState(true);
+    const [refreshContent, setRefreshContent] = useState(false);
     const [tourList, setTourList] = useState<any[]>([]);
     const [currentPage, setCurrentPage] = useState<any>(1);
     const [totalPages, setTotalPages] = useState<any>(0);
     const [totalCount, setTotalCount] = useState<any>(0);
     const [sortFilter, setSortFilter] = useState<string>('traveler_rating');
-    const [isLoading, setIsLoading] = useState(false);
-    const [initLoading, setInitLoading] = useState(true);
-    const [refreshContent, setRefreshContent] = useState(false);
+    const [minPrice, setMinPrice] = useState<string>('');
+    const [maxPrice, setMaxPrice] = useState<string>('');
+    const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
 
     // Fetch data
     useEffect(() => {
         const controller = new AbortController();
         const fetchTours = async () => {
             try {
+                // Prepare json payload
+                let payloadData: any = {
+                    page: currentPage,
+                    sort: sortFilter,
+                };
+
+                // If min price or max price is selected, add them to the payload
+                // if (minPrice || maxPrice) {
+                //     payloadData['min_price'] = minPrice;
+                //     payloadData['max_price'] = maxPrice;
+                // }
+
                 // Fetch the data
                 const response = await fetch("/api/tours", {
                     method: "POST",
@@ -33,10 +48,7 @@ export default function ToursPage() {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({
-                        page: currentPage,
-                        sort: sortFilter,
-                    }),
+                    body: JSON.stringify(payloadData),
                 });
 
                 if (!response.ok) {
@@ -90,6 +102,10 @@ export default function ToursPage() {
                 sortFilter={sortFilter}
                 setSortFilter={setSortFilter}
                 setCurrentPage={setCurrentPage}
+                minPrice={minPrice}
+                setMinPrice={setMinPrice}
+                maxPrice={maxPrice}
+                setMaxPrice={setMaxPrice}
             />
             <TourListingGrid
                 initLoading={initLoading}

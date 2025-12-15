@@ -12,17 +12,30 @@ interface TourFiltersProps {
     sortFilter: string;
     setSortFilter: (value: string) => void;
     setCurrentPage: (page: number) => void;
+    minPrice: string;
+    setMinPrice: (value: string) => void;
+    maxPrice: string;
+    setMaxPrice: (value: string) => void;
 }
 
-export function TourFilters({ initLoading, isLoading, totalCount, sortFilter, setSortFilter, setCurrentPage }: TourFiltersProps) {
+export function TourFilters({
+    initLoading,
+    isLoading,
+    totalCount,
+    sortFilter,
+    setSortFilter,
+    setCurrentPage,
+    minPrice,
+    setMinPrice,
+    maxPrice,
+    setMaxPrice
+}: TourFiltersProps) {
     // Define state
     const [isOpen, setIsOpen] = useState(false);
     const [expandedSections, setExpandedSections] = useState<string[]>(["languages", "duration", "price"]);
     const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
     const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
-    const [priceMin, setPriceMin] = useState("");
-    const [priceMax, setPriceMax] = useState("");
-    const [sortDisplay, setSortDisplay] = useState("Traveler Rating");
+    const [sortDisplay, setSortDisplay] = useState("Recommended");
     const [showAllLanguages, setShowAllLanguages] = useState(false);
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
     const sortDropdownRef = useRef<HTMLDivElement>(null);
@@ -31,22 +44,28 @@ export function TourFilters({ initLoading, isLoading, totalCount, sortFilter, se
     const durationRef = useRef<HTMLDivElement>(null);
     const priceRef = useRef<HTMLDivElement>(null);
 
-    const categories = [
-        { name: "Activities", count: 0 },
-        { name: "On the Ground", count: 0 },
-        { name: "Tours, Sightseeing & Cruises", count: 0 },
-        { name: "Uncategorized", count: 0 },
-    ]
+    // const categories = [
+    //     { name: "Activities", count: 0 },
+    //     { name: "On the Ground", count: 0 },
+    //     { name: "Tours, Sightseeing & Cruises", count: 0 },
+    //     { name: "Uncategorized", count: 0 },
+    // ]
 
     const languages = ["English", "French", "German", "Italian", "Portuguese", "Spanish", "Japanese", "Chinese"]
     const displayedLanguages = showAllLanguages ? languages : languages.slice(0, 5)
 
     // Define durations
-    const durations = ["Up to 1 hour", "1 to 4 hours", "4 hours to 1 day", "1 day to 3 days", "More than 3 days"]
+    const durations = [
+        { value: "upto_1_hour", label: "Up to 1 hour" },
+        { value: "1_to_4_hours", label: "1 to 4 hours" },
+        { value: "4_hours_to_1_day", label: "4 hours to 1 day" },
+        { value: "1_to_3_days", label: "1 day to 3 days" },
+        { value: "more_than_3_days", label: "More than 3 days" },
+    ];
 
     // Define sort options
     const sortOptions = [
-        { value: "traveler_rating", label: "Traveler Rating" },
+        { value: "traveler_rating", label: "Recommended" },
         { value: "price_low_to_high", label: "Price: Low to High" },
         { value: "price_high_to_low", label: "Price: High to Low" },
         { value: "duration_low_to_high", label: "Duration: Short to Long" },
@@ -65,8 +84,8 @@ export function TourFilters({ initLoading, isLoading, totalCount, sortFilter, se
     const handleReset = () => {
         setSelectedLanguage(null)
         setSelectedDurations([])
-        setPriceMin("")
-        setPriceMax("")
+        setMinPrice("");
+        setMaxPrice("")
         setSortFilter("traveler_rating");
         setCurrentPage(1);
     }
@@ -186,22 +205,20 @@ export function TourFilters({ initLoading, isLoading, totalCount, sortFilter, se
                                                 }`}
                                         >
                                             <div className="space-y-2">
-                                                {durations.map((duration) => (
-                                                    <label key={duration} className="flex items-center gap-3 cursor-pointer py-1">
+                                                {durations.map((option) => (
+                                                    <label key={option.value} className="flex items-center gap-3 cursor-pointer py-1">
                                                         <input
                                                             type="checkbox"
-                                                            checked={selectedDurations.includes(duration)}
-                                                            onChange={() => toggleDuration(duration)}
+                                                            checked={selectedDurations.includes(option.value)}
+                                                            onChange={() => toggleDuration(option.value)}
                                                             className="w-4 h-4 text-[#1a9cb0] border-gray-300 rounded focus:ring-[#1a9cb0]"
                                                         />
-                                                        <span className="text-sm text-gray-700">{duration}</span>
+                                                        <span className="text-sm text-gray-700">{option.label}</span>
                                                     </label>
                                                 ))}
                                             </div>
                                         </div>
                                     </div>
-
-                                    {/* Price Section */}
                                     <div>
                                         <button
                                             onClick={() => toggleSection("price")}
@@ -223,8 +240,8 @@ export function TourFilters({ initLoading, isLoading, totalCount, sortFilter, se
                                                     <input
                                                         type="text"
                                                         placeholder="Min"
-                                                        value={priceMin}
-                                                        onChange={(e) => setPriceMin(e.target.value)}
+                                                        value={minPrice}
+                                                        onChange={(e) => setMinPrice(e.target.value)}
                                                         className="flex-1 w-full px-3 py-2 text-sm text-gray-700 focus:outline-none"
                                                     />
                                                     <span className="px-2 py-2 bg-gray-100 text-gray-500 text-sm border-l border-gray-300">
@@ -236,8 +253,8 @@ export function TourFilters({ initLoading, isLoading, totalCount, sortFilter, se
                                                     <input
                                                         type="text"
                                                         placeholder="Max"
-                                                        value={priceMax}
-                                                        onChange={(e) => setPriceMax(e.target.value)}
+                                                        value={maxPrice}
+                                                        onChange={(e) => setMaxPrice(e.target.value)}
                                                         className="flex-1 w-full px-3 py-2 text-sm text-gray-700 focus:outline-none"
                                                     />
                                                     <span className="px-2 py-2 bg-gray-100 text-gray-500 text-sm border-l border-gray-300">
