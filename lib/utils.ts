@@ -7,10 +7,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // Format number format
-export function formatPrice(price: any) {
+export function formatPrice(price: any, decimal = 2) {
     // Format price
     const formattedPrice = new Intl.NumberFormat("en-US", {
-        minimumFractionDigits: 2,
+        minimumFractionDigits: decimal,
         maximumFractionDigits: 2,
     }).format(price);
 

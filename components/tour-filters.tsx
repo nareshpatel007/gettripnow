@@ -13,12 +13,15 @@ interface TourFiltersProps {
     setIsSidebarFilterOpen: (value: boolean) => void;
     isSidebarFilterOpen: boolean;
     setAppliedFilter: (value: boolean) => void;
+    setResetFilter: (value: boolean) => void;
     setSortFilter: (value: string) => void;
     setCurrentPage: (page: number) => void;
     setSelectedDurations: (value: string) => void;
     selectedDurations: string;
     setSelectedRating: (value: string) => void;
     selectedRating: string;
+    setSelectedCountry: (value: string) => void;
+    selectedCountry: string;
     minPrice: string;
     setMinPrice: (value: string) => void;
     maxPrice: string;
@@ -34,12 +37,15 @@ export function TourFilters({
     setIsSidebarFilterOpen,
     isSidebarFilterOpen,
     setAppliedFilter,
+    setResetFilter,
     setSortFilter,
     setCurrentPage,
     setSelectedDurations,
     selectedDurations,
     setSelectedRating,
     selectedRating,
+    setSelectedCountry,
+    selectedCountry,
     minPrice,
     setMinPrice,
     maxPrice,
@@ -51,17 +57,14 @@ export function TourFilters({
     const [expandedSections, setExpandedSections] = useState<string[]>(["duration", "ratings", "price"]);
     const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
     const [sortDisplay, setSortDisplay] = useState("Recommended");
-    const [showAllLanguages, setShowAllLanguages] = useState(false);
+    const [showAllcountry, setShowAllcountry] = useState(false);
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
     const sortDropdownRef = useRef<HTMLDivElement>(null);
 
-    const languagesRef = useRef<HTMLDivElement>(null);
+    const countryRef = useRef<HTMLDivElement>(null);
     const ratingsRef = useRef<HTMLDivElement>(null);
     const durationRef = useRef<HTMLDivElement>(null);
     const priceRef = useRef<HTMLDivElement>(null);
-
-    const languages = ["English", "French", "German", "Italian", "Portuguese", "Spanish", "Japanese", "Chinese"]
-    const displayedLanguages = showAllLanguages ? languages : languages.slice(0, 5)
 
     // Define sort options
     const sortOptions = [
@@ -79,18 +82,6 @@ export function TourFilters({
 
     const toggleDuration = (duration: string) => {
         // setSelectedDurations((prev) => (prev.includes(duration) ? prev.filter((d) => d !== duration) : [...prev, duration]))
-        setSelectedDurations(duration);
-    }
-
-    const handleReset = () => {
-        // setSelectedLanguage(null)
-        setSelectedDurations("");
-        setSelectedRating("");
-        setMinPrice("");
-        setMaxPrice("")
-        setSortFilter("traveler_rating");
-        setCurrentPage(1);
-        setAppliedFilter(true);
     }
 
     useEffect(() => {
@@ -131,14 +122,20 @@ export function TourFilters({
                                     {/* Reset & Apply Buttons */}
                                     <div className="flex gap-3 px-4 pb-4">
                                         <button
-                                            onClick={handleReset}
+                                            onClick={() => {
+                                                setResetFilter(true);
+                                                setCurrentPage(1);
+                                            }}
                                             disabled={isLoading}
                                             className="flex-1 py-2.5 px-4 border border-[#1a2b49] rounded-md text-sm font-medium text-[#1a2b49] hover:bg-[#1a2b49] hover:text-white cursor-pointer transition-colors"
                                         >
                                             Reset
                                         </button>
                                         <button
-                                            onClick={() => setAppliedFilter(true)}
+                                            onClick={() => {
+                                                setAppliedFilter(true);
+                                                setCurrentPage(1);
+                                            }}
                                             disabled={isLoading}
                                             className="flex-1 flex items-center justify-center py-2.5 px-4 bg-[#1a2b49] text-white rounded-md border border-[#1a2b49] text-sm font-medium hover:bg-white hover:text-[#1a2b49] hover:border-[#1a2b49] cursor-pointer transition-colors"
                                         >
@@ -148,46 +145,48 @@ export function TourFilters({
                                     </div>
                                 </div>
                                 <div className="p-4 space-y-6">
-                                    <div>
-                                        <button
-                                            onClick={() => toggleSection("languages")}
-                                            className="flex items-center justify-between w-full text-left mb-3"
-                                        >
-                                            <h3 className="text-base font-semibold text-[#1a2b49]">Languages</h3>
-                                            <ChevronDown
-                                                className={`h-4 w-4 text-gray-500 transition-transform duration-300 ease-in-out ${expandedSections.includes("languages") ? "rotate-180" : ""
+                                    {filterOptions?.countries && (
+                                        <div>
+                                            <button
+                                                onClick={() => toggleSection("country")}
+                                                className="flex items-center justify-between w-full text-left mb-3"
+                                            >
+                                                <h3 className="text-base font-semibold text-[#1a2b49]">Country</h3>
+                                                <ChevronDown
+                                                    className={`h-4 w-4 text-gray-500 transition-transform duration-300 ease-in-out ${expandedSections.includes("country") ? "rotate-180" : ""
+                                                        }`}
+                                                />
+                                            </button>
+                                            <div
+                                                ref={countryRef}
+                                                className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections.includes("country") ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
                                                     }`}
-                                            />
-                                        </button>
-                                        <div
-                                            ref={languagesRef}
-                                            className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections.includes("languages") ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-                                                }`}
-                                        >
-                                            <div className="space-y-2">
-                                                {displayedLanguages.map((language) => (
-                                                    <label key={language} className="flex items-center gap-3 cursor-pointer py-1">
-                                                        <input
-                                                            type="radio"
-                                                            name="language"
-                                                            checked={selectedLanguage === language}
-                                                            onChange={() => setSelectedLanguage(language)}
-                                                            className="w-4 h-4 text-[#1a9cb0] border-gray-300 focus:ring-[#1a9cb0]"
-                                                        />
-                                                        <span className="text-sm text-gray-700">{language}</span>
-                                                    </label>
-                                                ))}
-                                                {languages.length > 5 && (
-                                                    <button
-                                                        onClick={() => setShowAllLanguages(!showAllLanguages)}
-                                                        className="text-sm text-[#f53] cursor-pointer hover:underline mt-2"
-                                                    >
-                                                        {showAllLanguages ? "- Show less" : "+ Show more"}
-                                                    </button>
-                                                )}
+                                            >
+                                                <div className="space-y-2">
+                                                    {filterOptions?.countries.map((item: { id: string; name: string }) => (
+                                                        <label key={item?.id} className="flex items-center gap-3 cursor-pointer py-1">
+                                                            <input
+                                                                type="radio"
+                                                                name="country"
+                                                                checked={selectedCountry === item.id}
+                                                                onChange={() => setSelectedCountry(item.id)}
+                                                                className="w-4 h-4 text-[#1a9cb0] border-gray-300 focus:ring-[#1a9cb0]"
+                                                            />
+                                                            <span className="text-sm text-gray-700">{item?.name}</span>
+                                                        </label>
+                                                    ))}
+                                                    {/* {filterOptions?.countries.length > 5 && (
+                                                        <button
+                                                            onClick={() => setShowAllcountry(!showAllcountry)}
+                                                            className="text-sm text-[#f53] cursor-pointer hover:underline mt-2"
+                                                        >
+                                                            {showAllcountry ? "- Show less" : "+ Show more"}
+                                                        </button>
+                                                    )} */}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    )}
 
                                     {filterOptions?.durations && (
                                         <div>
@@ -312,10 +311,10 @@ export function TourFilters({
                         <div className="relative" ref={sortDropdownRef}>
                             <button
                                 onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
-                                className="flex items-center gap-1 md:gap-2 border border-gray-300 rounded-md px-3 md:px-4 py-2 md:py-2.5 hover:border-gray-400 transition-colors cursor-pointer"
+                                className="flex items-center gap-1 md:gap-2 border border-gray-300 rounded-md px-3 md:px-4 py-2.5 md:py-2.5 hover:border-gray-400 text-gray-600 transition-colors cursor-pointer"
                             >
                                 <span className="hidden sm:inline text-sm text-gray-600">Sort by:</span>
-                                <span className="text-xs sm:text-sm font-medium text-gray-900 max-w-[100px] sm:max-w-none truncate">
+                                <span className="text-xs sm:text-sm font-medium text-gray-600 sm:max-w-none truncate">
                                     {sortDisplay}
                                 </span>
                                 <ChevronDown
