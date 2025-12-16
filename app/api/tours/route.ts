@@ -6,7 +6,7 @@ export async function POST(req: Request) {
 
     // Make API request
     const body = await req.json().catch(() => ({}));
-    const res = await fetch(`${process.env.API_ENDPOINT_DOMAIN}v1/frontside/filter_tours`, {
+    const res = await fetch(`${process.env.API_ENDPOINT_DOMAIN}v1/frontside/all_tours`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

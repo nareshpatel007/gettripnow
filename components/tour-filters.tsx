@@ -10,12 +10,20 @@ interface TourFiltersProps {
     isLoading: boolean;
     totalCount: string;
     sortFilter: string;
+    setIsSidebarFilterOpen: (value: boolean) => void;
+    isSidebarFilterOpen: boolean;
+    setAppliedFilter: (value: boolean) => void;
     setSortFilter: (value: string) => void;
     setCurrentPage: (page: number) => void;
+    setSelectedDurations: (value: string) => void;
+    selectedDurations: string;
+    setSelectedRating: (value: string) => void;
+    selectedRating: string;
     minPrice: string;
     setMinPrice: (value: string) => void;
     maxPrice: string;
     setMaxPrice: (value: string) => void;
+    filterOptions: any;
 }
 
 export function TourFilters({
@@ -23,45 +31,37 @@ export function TourFilters({
     isLoading,
     totalCount,
     sortFilter,
+    setIsSidebarFilterOpen,
+    isSidebarFilterOpen,
+    setAppliedFilter,
     setSortFilter,
     setCurrentPage,
+    setSelectedDurations,
+    selectedDurations,
+    setSelectedRating,
+    selectedRating,
     minPrice,
     setMinPrice,
     maxPrice,
-    setMaxPrice
+    setMaxPrice,
+    filterOptions
 }: TourFiltersProps) {
     // Define state
-    const [isOpen, setIsOpen] = useState(false);
-    const [expandedSections, setExpandedSections] = useState<string[]>(["languages", "duration", "price"]);
+    
+    const [expandedSections, setExpandedSections] = useState<string[]>(["duration", "ratings", "price"]);
     const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
-    const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
     const [sortDisplay, setSortDisplay] = useState("Recommended");
     const [showAllLanguages, setShowAllLanguages] = useState(false);
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
     const sortDropdownRef = useRef<HTMLDivElement>(null);
 
     const languagesRef = useRef<HTMLDivElement>(null);
+    const ratingsRef = useRef<HTMLDivElement>(null);
     const durationRef = useRef<HTMLDivElement>(null);
     const priceRef = useRef<HTMLDivElement>(null);
 
-    // const categories = [
-    //     { name: "Activities", count: 0 },
-    //     { name: "On the Ground", count: 0 },
-    //     { name: "Tours, Sightseeing & Cruises", count: 0 },
-    //     { name: "Uncategorized", count: 0 },
-    // ]
-
     const languages = ["English", "French", "German", "Italian", "Portuguese", "Spanish", "Japanese", "Chinese"]
     const displayedLanguages = showAllLanguages ? languages : languages.slice(0, 5)
-
-    // Define durations
-    const durations = [
-        { value: "upto_1_hour", label: "Up to 1 hour" },
-        { value: "1_to_4_hours", label: "1 to 4 hours" },
-        { value: "4_hours_to_1_day", label: "4 hours to 1 day" },
-        { value: "1_to_3_days", label: "1 day to 3 days" },
-        { value: "more_than_3_days", label: "More than 3 days" },
-    ];
 
     // Define sort options
     const sortOptions = [
@@ -78,20 +78,19 @@ export function TourFilters({
     }
 
     const toggleDuration = (duration: string) => {
-        setSelectedDurations((prev) => (prev.includes(duration) ? prev.filter((d) => d !== duration) : [...prev, duration]))
+        // setSelectedDurations((prev) => (prev.includes(duration) ? prev.filter((d) => d !== duration) : [...prev, duration]))
+        setSelectedDurations(duration);
     }
 
     const handleReset = () => {
-        setSelectedLanguage(null)
-        setSelectedDurations([])
+        // setSelectedLanguage(null)
+        setSelectedDurations("");
+        setSelectedRating("");
         setMinPrice("");
         setMaxPrice("")
         setSortFilter("traveler_rating");
         setCurrentPage(1);
-    }
-
-    const handleApply = () => {
-        setIsOpen(false)
+        setAppliedFilter(true);
     }
 
     useEffect(() => {
@@ -113,7 +112,7 @@ export function TourFilters({
                     </p>
                     <div className="flex items-center gap-3">
                         {isLoading && <Loader2 className="animate-spin h-5 w-5 text-gray-600" />}
-                        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                        <Sheet open={isSidebarFilterOpen} onOpenChange={setIsSidebarFilterOpen}>
                             <SheetTrigger asChild>
                                 <button className="flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 border border-gray-300 rounded-md hover:border-gray-400 transition-colors cursor-pointer">
                                     <SlidersHorizontal className="h-4 w-4 text-gray-600" />
@@ -125,7 +124,7 @@ export function TourFilters({
                                 <div className="sticky top-0 bg-white z-10 border-b border-gray-200">
                                     <div className="flex items-center justify-between p-4">
                                         <h2 className="text-xl font-semibold text-[#1a2b49]">Filter</h2>
-                                        <button onClick={() => setIsOpen(false)} className="text-gray-500 hover:text-gray-700">
+                                        <button onClick={() => setIsSidebarFilterOpen(false)} className="text-gray-500 hover:text-gray-700">
                                             <X className="h-5 w-5" />
                                         </button>
                                     </div>
@@ -133,14 +132,17 @@ export function TourFilters({
                                     <div className="flex gap-3 px-4 pb-4">
                                         <button
                                             onClick={handleReset}
+                                            disabled={isLoading}
                                             className="flex-1 py-2.5 px-4 border border-[#1a2b49] rounded-md text-sm font-medium text-[#1a2b49] hover:bg-[#1a2b49] hover:text-white cursor-pointer transition-colors"
                                         >
                                             Reset
                                         </button>
                                         <button
-                                            onClick={handleApply}
-                                            className="flex-1 py-2.5 px-4 bg-[#1a2b49] text-white rounded-md border border-[#1a2b49] text-sm font-medium hover:bg-white hover:text-[#1a2b49] hover:border-[#1a2b49] cursor-pointer transition-colors"
+                                            onClick={() => setAppliedFilter(true)}
+                                            disabled={isLoading}
+                                            className="flex-1 flex items-center justify-center py-2.5 px-4 bg-[#1a2b49] text-white rounded-md border border-[#1a2b49] text-sm font-medium hover:bg-white hover:text-[#1a2b49] hover:border-[#1a2b49] cursor-pointer transition-colors"
                                         >
+                                            {/* {isLoading && <Loader2 className="animate-spin h-5 w-5 mr-2" />} */}
                                             Apply
                                         </button>
                                     </div>
@@ -187,38 +189,76 @@ export function TourFilters({
                                         </div>
                                     </div>
 
-                                    {/* Duration Section */}
-                                    <div>
-                                        <button
-                                            onClick={() => toggleSection("duration")}
-                                            className="flex items-center justify-between w-full text-left mb-3"
-                                        >
-                                            <h3 className="text-base font-semibold text-[#1a2b49]">Duration</h3>
-                                            <ChevronDown
-                                                className={`h-4 w-4 text-gray-500 transition-transform duration-300 ease-in-out ${expandedSections.includes("duration") ? "rotate-180" : ""
+                                    {filterOptions?.durations && (
+                                        <div>
+                                            <button
+                                                onClick={() => toggleSection("duration")}
+                                                className="flex items-center justify-between w-full text-left mb-3"
+                                            >
+                                                <h3 className="text-base font-semibold text-[#1a2b49]">Duration</h3>
+                                                <ChevronDown
+                                                    className={`h-4 w-4 text-gray-500 transition-transform duration-300 ease-in-out ${expandedSections.includes("duration") ? "rotate-180" : ""
+                                                        }`}
+                                                />
+                                            </button>
+                                            <div
+                                                ref={durationRef}
+                                                className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections.includes("duration") ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
                                                     }`}
-                                            />
-                                        </button>
-                                        <div
-                                            ref={durationRef}
-                                            className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections.includes("duration") ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-                                                }`}
-                                        >
-                                            <div className="space-y-2">
-                                                {durations.map((option) => (
-                                                    <label key={option.value} className="flex items-center gap-3 cursor-pointer py-1">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={selectedDurations.includes(option.value)}
-                                                            onChange={() => toggleDuration(option.value)}
-                                                            className="w-4 h-4 text-[#1a9cb0] border-gray-300 rounded focus:ring-[#1a9cb0]"
-                                                        />
-                                                        <span className="text-sm text-gray-700">{option.label}</span>
-                                                    </label>
-                                                ))}
+                                            >
+                                                <div className="space-y-2">
+                                                    {filterOptions?.durations.map((item: { label: string; value: string }) => (
+                                                        <label key={item?.value} className="flex items-center gap-3 cursor-pointer py-1">
+                                                            <input
+                                                                type="radio"
+                                                                name="duration"
+                                                                checked={selectedDurations === item?.value}
+                                                                onChange={() => setSelectedDurations(item?.value)}
+                                                                className="w-4 h-4 text-[#1a9cb0] border-gray-300 rounded focus:ring-[#1a9cb0]"
+                                                            />
+                                                            <span className="text-sm text-gray-700">{item?.label}</span>
+                                                        </label>
+                                                    ))}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    )}
+                                    
+                                    {filterOptions?.ratings && (
+                                        <div>
+                                            <button
+                                                onClick={() => toggleSection("ratings")}
+                                                className="flex items-center justify-between w-full text-left mb-3"
+                                            >
+                                                <h3 className="text-base font-semibold text-[#1a2b49]">Rating</h3>
+                                                <ChevronDown
+                                                    className={`h-4 w-4 text-gray-500 transition-transform duration-300 ease-in-out ${expandedSections.includes("ratings") ? "rotate-180" : ""
+                                                        }`}
+                                                />
+                                            </button>
+                                            <div
+                                                ref={ratingsRef}
+                                                className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections.includes("ratings") ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                                                    }`}
+                                            >
+                                                <div className="space-y-2">
+                                                    {filterOptions?.ratings.map((item: { label: string; value: string }) => (
+                                                        <label key={item?.value} className="flex items-center gap-3 cursor-pointer py-1">
+                                                            <input
+                                                                type="radio"
+                                                                name="ratings"
+                                                                checked={selectedRating === item?.value}
+                                                                onChange={() => setSelectedRating(item?.value)}
+                                                                className="w-4 h-4 text-[#1a9cb0] border-gray-300 rounded focus:ring-[#1a9cb0]"
+                                                            />
+                                                            <span className="text-sm text-gray-700">{item?.label}</span>
+                                                        </label>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
                                     <div>
                                         <button
                                             onClick={() => toggleSection("price")}

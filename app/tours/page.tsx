@@ -15,6 +15,7 @@ export default function ToursPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [initLoading, setInitLoading] = useState(true);
     const [refreshContent, setRefreshContent] = useState(false);
+    const [isSidebarFilterOpen, setIsSidebarFilterOpen] = useState(false);
     const [tourList, setTourList] = useState<any[]>([]);
     const [currentPage, setCurrentPage] = useState<any>(1);
     const [totalPages, setTotalPages] = useState<any>(0);
@@ -22,13 +23,18 @@ export default function ToursPage() {
     const [sortFilter, setSortFilter] = useState<string>('traveler_rating');
     const [minPrice, setMinPrice] = useState<string>('');
     const [maxPrice, setMaxPrice] = useState<string>('');
-    const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
+    const [filterOptions, setFilterOptions] = useState<string[]>([]);
+    const [selectedDurations, setSelectedDurations] = useState<string>('');
+    const [selectedRating, setSelectedRating] = useState<string>('');
+    const [appliedFilter, setAppliedFilter] = useState(false);
 
     // Fetch data
     useEffect(() => {
         const controller = new AbortController();
         const fetchTours = async () => {
             try {
+                setIsLoading(true);
+
                 // Prepare json payload
                 let payloadData: any = {
                     page: currentPage,
@@ -36,10 +42,15 @@ export default function ToursPage() {
                 };
 
                 // If min price or max price is selected, add them to the payload
-                // if (minPrice || maxPrice) {
-                //     payloadData['min_price'] = minPrice;
-                //     payloadData['max_price'] = maxPrice;
-                // }
+                if (minPrice || maxPrice) {
+                    payloadData['min_price'] = minPrice;
+                    payloadData['max_price'] = maxPrice;
+                }
+
+                // If selectedDurations is not empty, add it to the payload
+                if (selectedDurations) {
+                    payloadData['duration'] = selectedDurations;
+                }
 
                 // Fetch the data
                 const response = await fetch("/api/tours", {
@@ -60,6 +71,7 @@ export default function ToursPage() {
 
                 // Update the state
                 setTourList(data?.data?.result ?? []);
+                setFilterOptions(data?.data?.filters ?? []);
                 setTotalPages(data?.data?.last_page ?? 0);
                 setCurrentPage(data?.data?.current_page ?? 1);
                 setTotalCount(data?.data?.total ?? 0);
@@ -71,11 +83,13 @@ export default function ToursPage() {
                 setIsLoading(false);
                 setRefreshContent(false);
                 setInitLoading(false);
+                setAppliedFilter(false);
+                setIsSidebarFilterOpen(false);
             }
         };
         fetchTours();
         return () => controller.abort();
-    }, [currentPage, sortFilter, refreshContent]);
+    }, [currentPage, sortFilter, appliedFilter, refreshContent]);
 
     return (
         <div className="min-h-screen bg-white">
@@ -98,6 +112,9 @@ export default function ToursPage() {
             <TourFilters
                 initLoading={initLoading}
                 isLoading={isLoading}
+                setAppliedFilter={setAppliedFilter}
+                setIsSidebarFilterOpen={setIsSidebarFilterOpen}
+                isSidebarFilterOpen={isSidebarFilterOpen}
                 totalCount={totalCount}
                 sortFilter={sortFilter}
                 setSortFilter={setSortFilter}
@@ -106,6 +123,11 @@ export default function ToursPage() {
                 setMinPrice={setMinPrice}
                 maxPrice={maxPrice}
                 setMaxPrice={setMaxPrice}
+                setSelectedDurations={setSelectedDurations}
+                selectedDurations={selectedDurations}
+                setSelectedRating={setSelectedRating}
+                selectedRating={selectedRating}
+                filterOptions={filterOptions}
             />
             <TourListingGrid
                 initLoading={initLoading}
