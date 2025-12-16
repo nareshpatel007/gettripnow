@@ -69,7 +69,7 @@ export function AllToursListing() {
         fetchTours();
         return () => controller.abort();
     }, [resetFilter]);
-    
+
     // Init data
     useEffect(() => {
         const controller = new AbortController();
@@ -135,6 +135,10 @@ export function AllToursListing() {
                 setInitLoading(false);
                 setAppliedFilter(false);
                 setIsSidebarFilterOpen(false);
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth",
+                });
             }
         };
         filterData();

@@ -9,6 +9,7 @@ import { formatPrice } from "@/lib/utils"
 
 export function AttractionsList() {
     // Define state
+    const [initLoading, setInitLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [attractionList, setAttractionList] = useState<any>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -44,16 +45,23 @@ export function AttractionsList() {
                 const data = await response.json();
 
                 // Update the state
-                setAttractionList(data?.data?.result ?? []);
-                setTotalPages(data?.data?.last_page ?? 0);
-                setCurrentPage(data?.data?.current_page ?? 1);
-                setTotalCount(data?.data?.total ?? 0);
+                if (data?.success) {
+                    setAttractionList(data?.data?.result ?? []);
+                    setTotalPages(data?.data?.last_page ?? '');
+                    setCurrentPage(data?.data?.current_page ?? '');
+                    setTotalCount(data?.data?.total ?? '');
+                }
             } catch (error: any) {
                 if (error.name !== "AbortError") {
                     console.error("Failed to fetch tours:", error);
                 }
             } finally {
                 setIsLoading(false);
+                setInitLoading(false);
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth",
+                });
             }
         };
         fetchData();
@@ -105,56 +113,83 @@ export function AttractionsList() {
                     </div> */}
                 </div>
 
-                {/* Attractions Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {attractionList.map((attraction: { id: number, slug: string, name: string, image: string, total_reviews: string, average_rating: string, address: string, product_count: string, free_attraction: boolean }) => (
-                        <Link
-                            key={attraction.id}
-                            href={`/attractions/${attraction.slug}`}
-                            className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group"
-                        >
-                            <div className="relative h-48">
-                                <Image
-                                    src={attraction.image || "/placeholder.svg"}
-                                    alt={attraction.name}
-                                    fill
-                                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
-                            </div>
-                            <div className="p-5">
-                                <h2 className="text-lg font-bold text-[#1a2b49] mb-1 group-hover:text-[#f53] transition-colors">
-                                    {attraction.name}
-                                </h2>
-                                <p className="flex items-center gap-1 text-gray-500 text-sm mb-3">
-                                    <MapPin className="h-4 w-4" />
-                                    {attraction.address}
-                                </p>
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-2">
-                                        <div className="flex items-center gap-1">
-                                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                            <span className="font-medium text-sm">{attraction.average_rating}</span>
-                                        </div>
-                                        <span className="text-sm text-gray-500">({attraction.total_reviews.toLocaleString()} reviews)</span>
-                                    </div>
-                                    <span className="text-sm font-medium text-[#f53]">{formatPrice(attraction.product_count, 0)} tours</span>
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-
-                {/* {filteredAttractions.length === 0 && (
-                    <div className="text-center py-12 bg-white rounded-xl">
-                        <p className="text-gray-500">No attractions found matching your search.</p>
+                {initLoading && (
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f53]/10 border border-[#f53]/40">
+                            <Loader2 className="h-8 w-8 text-[#f53] animate-spin" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-800">Loading attractions...</h3>
                     </div>
-                )} */}
+                )}
 
-                <Pagination
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    totalPages={totalPages}
-                />
+                {!initLoading && attractionList && (
+                    <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {attractionList.map((attraction: { id: number, slug: string, name: string, image: string, total_reviews: string, average_rating: string, address: string, product_count: string, free_attraction: boolean }) => (
+                                <Link
+                                    key={attraction.id}
+                                    href={`/attractions/${attraction.slug}`}
+                                    className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group"
+                                >
+                                    <div className="relative h-48">
+                                        <Image
+                                            src={attraction.image || "/placeholder.svg"}
+                                            alt={attraction.name}
+                                            fill
+                                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                        />
+                                    </div>
+                                    <div className="p-5">
+                                        <h2 className="text-lg font-bold text-[#1a2b49] mb-1 group-hover:text-[#f53] transition-colors">
+                                            {attraction.name}
+                                        </h2>
+                                        <p className="flex items-center gap-1 text-gray-500 text-sm mb-3">
+                                            <MapPin className="h-4 w-4" />
+                                            {attraction.address}
+                                        </p>
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <div className="flex items-center gap-1">
+                                                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                                                    <span className="font-medium text-sm">{attraction.average_rating}</span>
+                                                </div>
+                                                <span className="text-sm text-gray-500">({attraction.total_reviews.toLocaleString()} reviews)</span>
+                                            </div>
+                                            <span className="text-sm font-medium text-[#f53]">{formatPrice(attraction.product_count, 0)} tours</span>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                        <Pagination
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
+                            totalPages={totalPages}
+                        />
+                    </>
+                )}
+
+                {!initLoading && attractionList && attractionList.length === 0 && (
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f53]/10 border border-[#f53]/40">
+                            <svg
+                                className="h-8 w-8 text-[#f53]"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 01.553-.894L9 2m6 0l5.447 2.724A1 1 0 0121 5.618v10.764a1 1 0 01-.553.894L15 20m-6 0l6-3m-6 3V2m6 18V2"
+                                />
+                            </svg>
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-800">No attractions found!</h3>
+                        <p className="mt-2 max-w-md text-sm text-gray-500">We couldn’t find any attractions matching your search. Try adjusting your search criteria.</p>
+                    </div>
+                )}
             </div>
         </div>
     )
