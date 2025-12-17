@@ -1,15 +1,16 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { Star, MapPin, Search, ChevronDown, Loader2 } from "lucide-react"
-import { Pagination } from "../pagination"
-import { formatPrice } from "@/lib/utils"
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Star, MapPin, Search, ChevronDown, Loader2 } from "lucide-react";
+import { Pagination } from "../pagination";
+import { formatPrice } from "@/lib/utils";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 export function AttractionsList() {
     // Define state
-    const [initLoading, setInitLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [attractionList, setAttractionList] = useState<any>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -57,7 +58,6 @@ export function AttractionsList() {
                 }
             } finally {
                 setIsLoading(false);
-                setInitLoading(false);
                 window.scrollTo({
                     top: 0,
                     behavior: "smooth",
@@ -71,7 +71,6 @@ export function AttractionsList() {
     return (
         <div className="min-h-screen bg-white">
             <div className="max-w-7xl mx-auto px-4 md:px-8 py-2 md:py-3">
-
                 <nav className="text-xs md:text-sm text-gray-500 overflow-x-auto whitespace-nowrap mb-3">
                     <Link href="/" className="hover:underline cursor-pointer">
                         <span className="hover:underline cursor-pointer">Home</span>
@@ -113,16 +112,7 @@ export function AttractionsList() {
                     </div> */}
                 </div>
 
-                {initLoading && (
-                    <div className="flex flex-col items-center justify-center py-16 text-center">
-                        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f53]/10 border border-[#f53]/40">
-                            <Loader2 className="h-8 w-8 text-[#f53] animate-spin" />
-                        </div>
-                        <h3 className="text-lg font-semibold text-gray-800">Loading attractions...</h3>
-                    </div>
-                )}
-
-                {!initLoading && attractionList && (
+                {attractionList && attractionList.length !== 0 ? (
                     <>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {attractionList.map((attraction: { id: number, slug: string, name: string, image: string, total_reviews: string, average_rating: string, address: string, product_count: string, free_attraction: boolean }) => (
@@ -166,29 +156,39 @@ export function AttractionsList() {
                             setCurrentPage={setCurrentPage}
                             totalPages={totalPages}
                         />
+                        {attractionList.length === 0 && <div className="flex flex-col items-center justify-center py-16 text-center">
+                            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f53]/10 border border-[#f53]/40">
+                                <svg
+                                    className="h-8 w-8 text-[#f53]"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 01.553-.894L9 2m6 0l5.447 2.724A1 1 0 0121 5.618v10.764a1 1 0 01-.553.894L15 20m-6 0l6-3m-6 3V2m6 18V2"
+                                    />
+                                </svg>
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-800">No attractions found!</h3>
+                            <p className="mt-2 max-w-md text-sm text-gray-500">We couldn’t find any attractions matching your search. Try adjusting your search criteria.</p>
+                        </div>}
                     </>
-                )}
-
-                {!initLoading && attractionList && attractionList.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-16 text-center">
-                        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f53]/10 border border-[#f53]/40">
-                            <svg
-                                className="h-8 w-8 text-[#f53]"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 01.553-.894L9 2m6 0l5.447 2.724A1 1 0 0121 5.618v10.764a1 1 0 01-.553.894L15 20m-6 0l6-3m-6 3V2m6 18V2"
-                                />
-                            </svg>
+                ) : (
+                    <>
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
+                            <Skeleton height={200} />
+                            <div className="hidden lg:block"><Skeleton height={200} /></div>
+                            <div className="hidden lg:block"><Skeleton height={200} /></div>
                         </div>
-                        <h3 className="text-lg font-semibold text-gray-800">No attractions found!</h3>
-                        <p className="mt-2 max-w-md text-sm text-gray-500">We couldn’t find any attractions matching your search. Try adjusting your search criteria.</p>
-                    </div>
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                            <div className="hidden lg:block"><Skeleton height={200} /></div>
+                            <div className="hidden lg:block"><Skeleton height={200} /></div>
+                            <div className="hidden lg:block"><Skeleton height={200} /></div>
+                        </div>
+                    </>
                 )}
             </div>
         </div>

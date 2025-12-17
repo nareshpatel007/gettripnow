@@ -12,7 +12,6 @@ import Link from "next/link";
 export function AllToursListing() {
     // Define state
     const [isLoading, setIsLoading] = useState(false);
-    const [initLoading, setInitLoading] = useState(true);
     const [isSidebarFilterOpen, setIsSidebarFilterOpen] = useState(false);
     const [tourList, setTourList] = useState<any[]>([]);
     const [currentPage, setCurrentPage] = useState<any>(1);
@@ -33,8 +32,6 @@ export function AllToursListing() {
         const controller = new AbortController();
         const fetchTours = async () => {
             try {
-                setIsLoading(true);
-
                 // Fetch the data
                 const response = await fetch("/api/tours", {
                     method: "POST",
@@ -62,7 +59,6 @@ export function AllToursListing() {
                 }
             } finally {
                 setIsLoading(false);
-                setInitLoading(false);
                 setIsSidebarFilterOpen(false);
             }
         };
@@ -132,7 +128,6 @@ export function AllToursListing() {
                 }
             } finally {
                 setIsLoading(false);
-                setInitLoading(false);
                 setAppliedFilter(false);
                 setIsSidebarFilterOpen(false);
                 window.scrollTo({
@@ -160,14 +155,11 @@ export function AllToursListing() {
     return (
         <div className="min-h-screen bg-white">
             <Header />
-
             <div className="max-w-7xl mx-auto px-4 md:px-8 py-2 md:py-3">
                 <nav className="text-xs md:text-sm text-gray-500 overflow-x-auto whitespace-nowrap">
                     <Link href="/" className="hover:underline cursor-pointer">
                         <span className="hover:underline cursor-pointer">Home</span>
                     </Link>
-                    {/* <span className="mx-1 md:mx-2">/</span>
-                    <span className="hover:underline cursor-pointer">Things to do in Cayman Islands</span> */}
                     <span className="mx-1 md:mx-2">/</span>
                     <span className="text-gray-700">All Tours</span>
                 </nav>
@@ -178,7 +170,6 @@ export function AllToursListing() {
             </div>
 
             <TourFilters
-                initLoading={initLoading}
                 isLoading={isLoading}
                 setAppliedFilter={setAppliedFilter}
                 setResetFilter={setResetFilter}
@@ -201,7 +192,6 @@ export function AllToursListing() {
                 filterOptions={filterOptions}
             />
             <TourListingGrid
-                initLoading={initLoading}
                 tourList={tourList}
             />
             <Pagination

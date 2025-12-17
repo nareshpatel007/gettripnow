@@ -1,97 +1,57 @@
 "use client"
 
-import { useState, useRef } from "react"
-import { TourCard } from "./tour-card"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-
-const recommendedTours = [
-    {
-        image: "/historic-trolley-tour-richmond-vintage-red-trolley.jpg",
-        badge: "Likely to sell out",
-        tourType: "DAY TRIP",
-        rating: 4.6,
-        reviews: 1446,
-        title: "From London: Oxford and Cotswolds Villages Day Trip",
-        duration: "10 hours",
-        price: "₹7,151",
-        originalPrice: "₹11,919",
-    },
-    {
-        image: "/ghost-tour-dark-spooky-shockoe-bottom-richmond.jpg",
-        tourType: "GUIDED TOUR",
-        rating: 4.8,
-        reviews: 777,
-        title: "Prague: Old Town, Astronomical Clock and Underground Tour",
-        duration: "2 - 3 hours",
-        price: "₹3,031",
-        originalPrice: "₹3,788",
-    },
-    {
-        image: "/sightseeing-tour-van-richmond-virginia-city.jpg",
-        tourType: "WORKSHOP OR CLASS",
-        rating: 4.9,
-        reviews: 2826,
-        title: "Istanbul: Original Turkish Mosaic Lamp Workshop with Snacks",
-        duration: "3 hours",
-        extraInfo: "Snacks included • 3 hours",
-        price: "₹2,016",
-        originalPrice: "₹2,762",
-    },
-    {
-        image: "/segway-tour-richmond-landmark-historic.jpg",
-        badge: "Likely to sell out",
-        tourType: "GUIDED TOUR",
-        rating: 4.6,
-        reviews: 3640,
-        title: "Budapest: Buda Castle District Vampires and Myths Night Tour",
-        duration: "110 minutes - 2 hours",
-        price: "₹2,105",
-    },
-    {
-        image: "/historic-trolley-tour-richmond-vintage-red-trolley.jpg",
-        tourType: "CITY TOUR",
-        rating: 4.7,
-        reviews: 2150,
-        title: "Rome: Skip-the-Line Colosseum, Forum & Palatine Hill Tour",
-        duration: "3 hours",
-        price: "₹4,500",
-        originalPrice: "₹5,200",
-    },
-    {
-        image: "/ghost-tour-dark-spooky-shockoe-bottom-richmond.jpg",
-        badge: "Best seller",
-        tourType: "ADVENTURE",
-        rating: 4.9,
-        reviews: 4200,
-        title: "Dubai: Desert Safari with BBQ Dinner and Entertainment",
-        duration: "6 hours",
-        price: "₹3,800",
-    },
-    {
-        image: "/sightseeing-tour-van-richmond-virginia-city.jpg",
-        tourType: "FOOD TOUR",
-        rating: 4.8,
-        reviews: 1890,
-        title: "Barcelona: Tapas and Wine Walking Tour in Gothic Quarter",
-        duration: "3 hours",
-        price: "₹5,600",
-        originalPrice: "₹6,200",
-    },
-    {
-        image: "/segway-tour-richmond-landmark-historic.jpg",
-        tourType: "DAY TRIP",
-        rating: 4.5,
-        reviews: 980,
-        title: "Paris: Versailles Palace and Gardens Full-Day Tour",
-        duration: "8 hours",
-        price: "₹8,900",
-    },
-]
+import { useState, useRef, useEffect } from "react";
+import { TourCard } from "./tour-card";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 export function RecommendedSection() {
-    const scrollContainerRef = useRef<HTMLDivElement>(null)
-    const [canScrollLeft, setCanScrollLeft] = useState(false)
-    const [canScrollRight, setCanScrollRight] = useState(true)
+    // Define state
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [initLoading, setInitLoading] = useState(true);
+    const [tourList, setTourList] = useState<any[]>([]);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(true);
+
+    // Init data
+    useEffect(() => {
+        const controller = new AbortController();
+        const filterData = async () => {
+            try {
+                // Fetch the data
+                const response = await fetch("/api/tours/filter_tours", {
+                    method: "POST",
+                    signal: controller.signal,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        limit: 15,
+                        rating: 5
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                // Parse the JSON response
+                const data = await response.json();
+
+                // Update the state
+                setTourList(data?.data?.result ?? []);
+            } catch (error: any) {
+                if (error.name !== "AbortError") {
+                    console.error("Failed to fetch tours:", error);
+                }
+            } finally {
+                setInitLoading(false);
+            }
+        };
+        filterData();
+        return () => controller.abort();
+    }, []);
 
     const checkScrollPosition = () => {
         if (scrollContainerRef.current) {
@@ -116,36 +76,49 @@ export function RecommendedSection() {
             <div className="flex items-center justify-between mb-6 md:mb-8">
                 <h2 className="text-lg md:text-2xl lg:text-3xl font-bold text-[#1a2b49]">Unforgettable travel experiences</h2>
                 <div className="flex gap-2">
-                    <button
-                        onClick={() => scroll("left")}
-                        disabled={!canScrollLeft}
-                        className="p-2 rounded-full border border-[#f53] text-[#F53] hover:bg-[#f53] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
-                        aria-label="Scroll left"
-                    >
-                        <ChevronLeft className="w-5 h-5" />
-                    </button>
-                    <button
-                        onClick={() => scroll("right")}
-                        disabled={!canScrollRight}
-                        className="p-2 rounded-full border border-[#f53] text-[#F53] hover:bg-[#f53] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
-                        aria-label="Scroll right"
-                    >
-                        <ChevronRight className="w-5 h-5" />
-                    </button>
+                    {!initLoading && tourList.length !== 0 && (
+                        <>
+                            <button
+                                onClick={() => scroll("left")}
+                                disabled={!canScrollLeft}
+                                className="p-2 rounded-full border border-[#f53] text-[#F53] hover:bg-[#f53] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                                aria-label="Scroll left"
+                            >
+                                <ChevronLeft className="w-5 h-5" />
+                            </button>
+                            <button
+                                onClick={() => scroll("right")}
+                                disabled={!canScrollRight}
+                                className="p-2 rounded-full border border-[#f53] text-[#F53] hover:bg-[#f53] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                                aria-label="Scroll right"
+                            >
+                                <ChevronRight className="w-5 h-5" />
+                            </button>
+                        </>
+                    )}
                 </div>
             </div>
-            <div
-                ref={scrollContainerRef}
-                onScroll={checkScrollPosition}
-                className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
-                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            >
-                {recommendedTours.map((tour, index) => (
-                    <div key={`${tour.title}-${index}`} className="flex-shrink-0 w-[280px] md:w-[300px]">
-                        <TourCard {...tour} />
-                    </div>
-                ))}
-            </div>
+            {!initLoading && tourList.length !== 0 ? (
+                <div
+                    ref={scrollContainerRef}
+                    onScroll={checkScrollPosition}
+                    className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
+                    style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                >
+                    {tourList && tourList.length > 0 && tourList.map((tour, index) => (
+                        <div key={`${tour.slug}-${index}`} className="flex-shrink-0 w-[280px] md:w-[300px]">
+                            <TourCard {...tour} />
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                    <Skeleton height={150} />
+                    <div className="hidden lg:block"><Skeleton height={150} /></div>
+                    <div className="hidden lg:block"><Skeleton height={150} /></div>
+                    <div className="hidden lg:block"><Skeleton height={150} /></div>
+                </div>
+            )}
         </section>
     )
 }

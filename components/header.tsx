@@ -20,8 +20,8 @@ export function Header() {
         {
             title: "Things to Do",
             links: [
-                { name: "Tours", href: "#" },
-                { name: "Attractions", href: "#" },
+                { name: "Tours", href: "/tours" },
+                { name: "Attractions", href: "/attractions" },
                 { name: "Day Trips", href: "#" },
                 { name: "Outdoor Activities", href: "#" },
                 { name: "Concerts & Shows", href: "#" },
