@@ -103,7 +103,7 @@ export function InterestSection() {
                 <div
                     ref={scrollContainerRef}
                     onScroll={checkScrollPosition}
-                    className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
+                    className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth"
                     style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                 >
                     {tourList && tourList.length > 0 && tourList.map((tour, index) => (
