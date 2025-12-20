@@ -18,10 +18,6 @@ const heroSlides = [
         alt: "Person skiing on snowy mountain",
     },
     {
-        image: "/tropical-beach-with-palm-trees-and-crystal-clear-w.jpg",
-        alt: "Tropical beach paradise",
-    },
-    {
         image: "/ancient-ruins-in-rome-italy-with-tourists.jpg",
         alt: "Ancient ruins in Rome",
     },
