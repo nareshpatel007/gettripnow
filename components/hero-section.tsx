@@ -37,7 +37,7 @@ export function HeroSection() {
             setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
         }, 5000)
         return () => clearInterval(interval)
-    }, [])
+    }, []);
 
     return (
         <section className="relative h-[480px] md:h-[560px]">
@@ -57,7 +57,7 @@ export function HeroSection() {
                 <h1 className="text-4xl md:text-6xl font-bold text-white mb-3 text-center">Discover & book things to do</h1>
                 <p className="text-white/90 text-base md:text-lg mb-8">Plan better with 300,000+ travel experiences.</p>
 
-                <div className="relative w-full max-w-2xl">
+                <div className="relative w-full">
                     <div className="bg-white rounded-lg p-1.5 flex items-center gap-2 w-full shadow-lg">
                         <div className="flex-1 flex items-center gap-3 px-4 py-3">
                             <Search className="h-6 w-6 text-gray-400" />
