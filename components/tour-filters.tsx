@@ -96,7 +96,7 @@ export function TourFilters({
             <div className="max-w-7xl mx-auto px-4 md:px-8 py-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                     <p className="text-sm text-gray-600">
-                        {totalCount ? `${totalCount}+ results` : ""}
+                        {totalCount ? `${totalCount}+ result${totalCount != "1" ? "s" : ""} found` : ""}
                     </p>
                     <div className="flex items-center gap-3">
                         {isLoading && <Loader2 className="animate-spin h-5 w-5 text-gray-600" />}
