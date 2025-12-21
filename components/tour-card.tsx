@@ -66,7 +66,9 @@ export function TourCard({
             </div>
             <div className="space-y-1 md:space-y-1.5">
                 {tag_name && (
-                    <p className="text-[10px] md:text-xs font-semibold text-gray-500 uppercase tracking-wide">{tag_name}</p>
+                    <Link href={`/tags/${tag_slug}`} className="hover:underline hover:text-[#1a2b49] block">
+                        <p className="text-[10px] md:text-xs font-semibold text-gray-500 uppercase tracking-wide">{tag_name}</p>
+                    </Link>
                 )}
                 <Link href={`/tours/${slug}`} className="hover:underline hover:text-[#1a2b49]">
                     <h4 className="text-sm md:text-base font-semibold text-[#1a2b49] line-clamp-2 leading-snug">{name}</h4>
