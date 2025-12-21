@@ -208,7 +208,7 @@ export function AttractionDetail({ slug }: Props) {
                     </div>
                 </div>
             </> : <>
-                <div className="max-w-7xl mx-auto px-4 md:px-8">
+                <div className="max-w-7xl mx-auto px-4 md:px-8 mt-3">
                     <Skeleton height={30} />
                     <Skeleton height={20} />
                     <Skeleton height={20} />
