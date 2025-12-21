@@ -98,18 +98,6 @@ export function AttractionsList() {
                             className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#f53] focus:border-transparent"
                         />
                     </div>
-                    {/* <div className="relative">
-                        <select
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            className="appearance-none px-4 py-2.5 pr-10 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#1a9cb0] focus:border-transparent cursor-pointer"
-                        >
-                            <option value="popular">Most Popular</option>
-                            <option value="rating">Highest Rated</option>
-                            <option value="tours">Most Tours</option>
-                        </select>
-                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
-                    </div> */}
                 </div>
 
                 {attractionList && attractionList.length !== 0 ? (

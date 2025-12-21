@@ -81,13 +81,18 @@ export function AttractionDetail({ slug }: Props) {
         };
         fetchAttraction();
         return () => controller.abort();
-    }, []);
+    }, [slug]);
 
     // Filter data
     useEffect(() => {
         const controller = new AbortController();
         const filterData = async () => {
             try {
+                if (!attractionData?.id) {
+                    return;
+                }
+
+                // Set loading
                 setIsLoading(true);
 
                 // Prepare json payload
@@ -156,7 +161,7 @@ export function AttractionDetail({ slug }: Props) {
         };
         filterData();
         return () => controller.abort();
-    }, [currentPage, sortFilter, resetFilter, appliedFilter]);
+    }, [attractionData, currentPage, sortFilter, resetFilter, appliedFilter]);
 
     // Reset filters
     useEffect(() => {
@@ -174,36 +179,33 @@ export function AttractionDetail({ slug }: Props) {
         <>
             {attractionData?.name ? <>
                 <div className="max-w-7xl mx-auto px-4 md:px-8 py-2 md:py-3">
-                    <nav className="text-xs md:text-sm text-gray-500 mb-4 overflow-x-auto whitespace-nowrap">
+                    <nav className="text-xs md:text-sm text-gray-500 overflow-x-auto whitespace-nowrap mb-3">
                         <Link href="/" className="hover:underline">Home</Link>
                         <span className="mx-1 md:mx-2">/</span>
                         <Link href="/attractions" className="hover:underline">Attractions</Link>
                         <span className="mx-1 md:mx-2">/</span>
                         <span className="text-gray-700">{attractionData?.name}</span>
                     </nav>
-                </div>
-                <div className="max-w-7xl mx-auto px-4 md:px-8">
-                    <div className="flex items-start justify-between">
-                        <div>
-                            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">{attractionData?.name}</h1>
-                            <div className="flex items-center flex-wrap gap-3 text-sm">
-                                <div className="flex items-center gap-1">
-                                    <div className="flex">
-                                        {[1, 2, 3, 4, 5].map((star) => (
-                                            <Star
-                                                key={star}
-                                                className={`h-4 w-4 ${star <= Math.floor(attractionData.average_rating) ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"}`}
-                                            />
-                                        ))}
-                                    </div>
-                                    <span className="font-medium">{attractionData.average_rating}</span>
-                                    <span className="text-gray-500">({formatPrice(attractionData.total_reviews, 0)} reviews)</span>
+
+                    <div className="mb-0">
+                        <h1 className="text-2xl md:text-3xl font-bold text-[#1a2b49] mb-3">{attractionData?.name}</h1>
+                        <div className="flex items-center flex-wrap gap-3 text-sm">
+                            <div className="flex items-center gap-1">
+                                <div className="flex">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <Star
+                                            key={star}
+                                            className={`h-4 w-4 ${star <= Math.floor(attractionData.average_rating) ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"}`}
+                                        />
+                                    ))}
                                 </div>
-                                <span className="text-gray-300">|</span>
-                                <span className="flex items-center gap-1 text-gray-600">
-                                    <MapPin className="h-4 w-4" /> {attractionData.address}
-                                </span>
+                                <span className="font-medium">{attractionData.average_rating}</span>
+                                <span className="text-gray-500">({formatPrice(attractionData.total_reviews, 0)} reviews)</span>
                             </div>
+                            <span className="text-gray-300">|</span>
+                            <span className="flex items-center gap-1 text-gray-600">
+                                <MapPin className="h-4 w-4" /> {attractionData.address}
+                            </span>
                         </div>
                     </div>
                 </div>
