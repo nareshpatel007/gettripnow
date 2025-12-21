@@ -32,15 +32,14 @@ export function RecommendedSection() {
                     }),
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+                // Handle non-200 responses
+                if (response.ok) {
+                    // Parse the JSON response
+                    const data = await response.json();
+
+                    // Update the state
+                    setTourList(data?.data?.result ?? []);
                 }
-
-                // Parse the JSON response
-                const data = await response.json();
-
-                // Update the state
-                setTourList(data?.data?.result ?? []);
             } catch (error: any) {
                 if (error.name !== "AbortError") {
                     console.error("Failed to fetch tours:", error);

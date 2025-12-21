@@ -12,11 +12,13 @@ import Link from "next/link";
 export function AllToursListing() {
     // Define state
     const [isLoading, setIsLoading] = useState(false);
-    const [isSidebarFilterOpen, setIsSidebarFilterOpen] = useState(false);
     const [tourList, setTourList] = useState<any[]>([]);
     const [currentPage, setCurrentPage] = useState<any>(1);
     const [totalPages, setTotalPages] = useState<any>(0);
     const [totalCount, setTotalCount] = useState<any>(0);
+
+    // Filter state
+    const [isSidebarFilterOpen, setIsSidebarFilterOpen] = useState(false);
     const [sortFilter, setSortFilter] = useState<string>('traveler_rating');
     const [minPrice, setMinPrice] = useState<string>('');
     const [maxPrice, setMaxPrice] = useState<string>('');
@@ -66,7 +68,7 @@ export function AllToursListing() {
         return () => controller.abort();
     }, [resetFilter]);
 
-    // Init data
+    // Filter data
     useEffect(() => {
         const controller = new AbortController();
         const filterData = async () => {
