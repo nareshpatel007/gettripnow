@@ -182,7 +182,7 @@ export function TagDetail({ slug }: Props) {
                     <nav className="text-xs md:text-sm text-gray-500 overflow-x-auto whitespace-nowrap mb-3">
                         <Link href="/" className="hover:underline">Home</Link>
                         <span className="mx-1 md:mx-2">/</span>
-                        <Link href="/tags" className="hover:underline">Tags</Link>
+                        <Link href="/tours" className="hover:underline">Tags</Link>
                         <span className="mx-1 md:mx-2">/</span>
                         <span className="text-gray-700">{tagData?.name}</span>
                     </nav>
