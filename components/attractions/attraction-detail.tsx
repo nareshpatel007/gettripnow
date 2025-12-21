@@ -1,30 +1,19 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import Image from "next/image"
-import Link from "next/link"
+import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import {
     Star,
-    MapPin,
-    Clock,
-    Calendar,
-    ChevronLeft,
-    ChevronRight,
-    Heart,
-    Share2,
-    Camera,
-    X,
-    Info,
-    Ticket,
-    Globe,
-    ArrowRight,
-    User,
-} from "lucide-react"
-import { formatPrice } from "@/lib/utils"
-import { TourListingGrid } from "../tour-listing-grid"
-import { Pagination } from "../pagination"
-import { HelpfulBanner } from "../helpful-banner"
-import { TourFilters } from "../tour-filters"
+    MapPin
+} from "lucide-react";
+import { formatPrice } from "@/lib/utils";
+import { TourListingGrid } from "../tour-listing-grid";
+import { Pagination } from "../pagination";
+import { HelpfulBanner } from "../helpful-banner";
+import { TourFilters } from "../tour-filters";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 // Define props
 type Props = {
@@ -57,6 +46,8 @@ export function AttractionDetail({ slug }: Props) {
         const controller = new AbortController();
         const fetchAttraction = async () => {
             try {
+                setIsLoading(true);
+
                 // Fetch the data
                 const response = await fetch("/api/attractions/single", {
                     method: "POST",
@@ -67,15 +58,11 @@ export function AttractionDetail({ slug }: Props) {
                 });
 
                 // Handle non-200 responses
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
+                if (response.ok) {
+                    // Parse the JSON response
+                    const data = await response.json();
 
-                // Parse the JSON response
-                const data = await response.json();
-
-                // Update the state
-                if (data?.success) {
+                    // Update the state
                     setAttractionData(data?.data?.attraction || {});
                     setTourList(data?.data?.tours?.result || []);
                     setFilterOptions(data?.data?.tours?.filters ?? []);
@@ -108,7 +95,7 @@ export function AttractionDetail({ slug }: Props) {
                     page: currentPage,
                     sort: sortFilter,
                     location: 'attraction',
-                    slug: attractionData?.slug || '',
+                    slug: attractionData?.id || '',
                 };
 
                 // If min price or max price is selected, add them to the payload
@@ -142,18 +129,17 @@ export function AttractionDetail({ slug }: Props) {
                     body: JSON.stringify(payloadData),
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+                // Handle non-200 responses
+                if (response.ok) {
+                    // Parse the JSON response
+                    const data = await response.json();
+
+                    // Update the state
+                    setTourList(data?.data?.result ?? []);
+                    setTotalPages(data?.data?.last_page ?? 0);
+                    setCurrentPage(data?.data?.current_page ?? 1);
+                    setTotalCount(data?.data?.total ?? 0);
                 }
-
-                // Parse the JSON response
-                const data = await response.json();
-
-                // Update the state
-                setTourList(data?.data?.result ?? []);
-                setTotalPages(data?.data?.last_page ?? 0);
-                setCurrentPage(data?.data?.current_page ?? 1);
-                setTotalCount(data?.data?.total ?? 0);
             } catch (error: any) {
                 if (error.name !== "AbortError") {
                     console.error("Failed to fetch tours:", error);
@@ -170,7 +156,7 @@ export function AttractionDetail({ slug }: Props) {
         };
         filterData();
         return () => controller.abort();
-    }, [currentPage, sortFilter, appliedFilter]);
+    }, [currentPage, sortFilter, resetFilter, appliedFilter]);
 
     // Reset filters
     useEffect(() => {
@@ -186,42 +172,48 @@ export function AttractionDetail({ slug }: Props) {
 
     return (
         <>
-            <div className="max-w-7xl mx-auto px-4 md:px-8 py-2 md:py-3">
-                <nav className="text-xs md:text-sm text-gray-500 mb-4 overflow-x-auto whitespace-nowrap">
-                    <Link href="/" className="hover:underline">Home</Link>
-                    <span className="mx-1 md:mx-2">/</span>
-                    <Link href="/attractions" className="hover:underline">Attractions</Link>
-                    <span className="mx-1 md:mx-2">/</span>
-                    <span className="text-gray-700">{attractionData?.name}</span>
-                </nav>
-            </div>
-            <div className="max-w-7xl mx-auto px-4 md:px-8">
-                <div className="flex items-start justify-between">
-                    <div>
-                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-                            {attractionData?.name}
-                        </h1>
-                        <div className="flex items-center flex-wrap gap-3 text-sm">
-                            <div className="flex items-center gap-1">
-                                <div className="flex">
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <Star
-                                            key={star}
-                                            className={`h-4 w-4 ${star <= Math.floor(attractionData.average_rating) ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"}`}
-                                        />
-                                    ))}
+            {attractionData?.name ? <>
+                <div className="max-w-7xl mx-auto px-4 md:px-8 py-2 md:py-3">
+                    <nav className="text-xs md:text-sm text-gray-500 mb-4 overflow-x-auto whitespace-nowrap">
+                        <Link href="/" className="hover:underline">Home</Link>
+                        <span className="mx-1 md:mx-2">/</span>
+                        <Link href="/attractions" className="hover:underline">Attractions</Link>
+                        <span className="mx-1 md:mx-2">/</span>
+                        <span className="text-gray-700">{attractionData?.name}</span>
+                    </nav>
+                </div>
+                <div className="max-w-7xl mx-auto px-4 md:px-8">
+                    <div className="flex items-start justify-between">
+                        <div>
+                            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">{attractionData?.name}</h1>
+                            <div className="flex items-center flex-wrap gap-3 text-sm">
+                                <div className="flex items-center gap-1">
+                                    <div className="flex">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <Star
+                                                key={star}
+                                                className={`h-4 w-4 ${star <= Math.floor(attractionData.average_rating) ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"}`}
+                                            />
+                                        ))}
+                                    </div>
+                                    <span className="font-medium">{attractionData.average_rating}</span>
+                                    <span className="text-gray-500">({formatPrice(attractionData.total_reviews, 0)} reviews)</span>
                                 </div>
-                                <span className="font-medium">{attractionData.average_rating}</span>
-                                <span className="text-gray-500">({formatPrice(attractionData.total_reviews, 0)} reviews)</span>
+                                <span className="text-gray-300">|</span>
+                                <span className="flex items-center gap-1 text-gray-600">
+                                    <MapPin className="h-4 w-4" /> {attractionData.address}
+                                </span>
                             </div>
-                            <span className="text-gray-300">|</span>
-                            <span className="flex items-center gap-1 text-gray-600">
-                                <MapPin className="h-4 w-4" /> {attractionData.address}
-                            </span>
                         </div>
                     </div>
                 </div>
-            </div>
+            </> : <>
+                <div className="max-w-7xl mx-auto px-4 md:px-8">
+                    <Skeleton height={30} />
+                    <Skeleton height={20} />
+                    <Skeleton height={20} />
+                </div>
+            </>}
             <TourFilters
                 isLoading={isLoading}
                 setAppliedFilter={setAppliedFilter}
