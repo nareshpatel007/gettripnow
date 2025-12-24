@@ -23,12 +23,21 @@ export function TourItinerary({ itinerary }: TourItineraryProps) {
 
     // Get display text
     const getDisplayText = (description: string, index: number) => {
+        // Count total words
+        const words = description.split(" ");
+
+        // If item expanded
         if (expandedItems[index]) return description;
 
-        const words = description.split(" ");
+        // If total words less than 30
+        if (words.length < 30) return description;
+
+        // If more words
         if (words.length > 30) {
             return words.slice(0, 30).join(" ") + "...";
         }
+
+        // Else show full
         return description;
     }
 
@@ -61,12 +70,13 @@ export function TourItinerary({ itinerary }: TourItineraryProps) {
                                     </div>
                                     <p className="text-gray-600 text-sm leading-relaxed mb-3">
                                         {getDisplayText(item.description, index)}
-                                        <button
+
+                                        {item.description && item.description.split(" ").length > 30 && <button
                                             onClick={() => toggleItemExpanded(index)}
                                             className="text-[#f53] hover:underline ml-1 font-medium bg-none border-none cursor-pointer p-0"
                                         >
                                             {expandedItems[index] ? "Show less" : "Read more"}
-                                        </button>
+                                        </button>}
                                     </p>
                                     <div className="flex gap-2 text-xs text-gray-600">
                                         {item.duration && <span>{item.duration}</span>}
