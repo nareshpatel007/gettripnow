@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import { ChevronUp } from "lucide-react";
+import { ChevronUp, CornerDownRightIcon } from "lucide-react";
 
 // Define props
 interface TourItineraryProps {
@@ -58,7 +58,8 @@ export function TourItinerary({ itinerary }: TourItineraryProps) {
                             <div key={index} className="flex gap-6">
                                 <div className="flex-shrink-0 relative">
                                     <div className="w-10 h-10 rounded-full bg-[#f53] text-white flex items-center justify-center font-bold text-lg">
-                                        {item.no}
+                                        {item.pass_by && <CornerDownRightIcon className="w-5 h-5 text-white" />}
+                                        {!item.pass_by && item.no}
                                     </div>
                                 </div>
                                 <div className="flex-1 pt-1">

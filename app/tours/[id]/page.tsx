@@ -4,8 +4,6 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { TourDetailHero } from "@/components/tour-detail/tour-detail-hero";
 import { TourBookingSidebar } from "@/components/tour-detail/tour-booking-sidebar";
-import { WhyTravelersLoved } from "@/components/tour-detail/why-travelers-loved";
-import { PromotedExperiences } from "@/components/tour-detail/promoted-experiences";
 import { TourOverview } from "@/components/tour-detail/tour-overview";
 import { WhatsIncluded } from "@/components/tour-detail/whats-included";
 import { MeetingAndPickup } from "@/components/tour-detail/meeting-and-pickup";
@@ -21,6 +19,7 @@ import { RecentlyViewed } from "@/components/recently-viewed";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { TourTagsList } from "@/components/tour-detail/tags-list";
 
 export default function TourDetailPage() {
     // Get slug
@@ -110,14 +109,16 @@ export default function TourDetailPage() {
                         <AlsoBought />
                         <RecentlyViewed />
                     </div>
-
-                    {/* Right Sidebar - Sticky Booking */}
                     <div className="hidden lg:block lg:w-[380px] flex-shrink-0">
                         <div className="sticky top-4">
                             <TourBookingSidebar />
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="max-w-7xl mx-auto px-4 md:px-8 mt-10">
+                <TourTagsList title="Explore Similar Things to Do" slug="tags" items={tourData?.tour_tags} />
+                <TourTagsList title="Related Attractions" slug="attractions" items={tourData?.tour_attractions} />
             </div>
             <Footer />
         </div>
