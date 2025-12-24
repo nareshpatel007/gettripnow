@@ -94,6 +94,9 @@ export default function TourDetailPage() {
                 <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
                     <div className="flex-1 min-w-0">
                         <TourDetailHero tourData={tourData} />
+                        <div className="hidden sm:block flex-shrink-0">
+                            <TourBookingSidebar tourData={tourData} />
+                        </div>
                         {/* <WhyTravelersLoved /> */}
                         {/* <PromotedExperiences /> */}
                         <TourOverview description={tourData?.tour?.description} />
@@ -109,9 +112,9 @@ export default function TourDetailPage() {
                         <AlsoBought />
                         <RecentlyViewed />
                     </div>
-                    <div className="hidden lg:block lg:w-[380px] flex-shrink-0">
+                    <div className="hidden md:block lg:block lg:w-[380px] flex-shrink-0">
                         <div className="sticky top-4">
-                            <TourBookingSidebar />
+                            <TourBookingSidebar tourData={tourData} />
                         </div>
                     </div>
                 </div>

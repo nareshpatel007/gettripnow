@@ -13,6 +13,7 @@ import {
     X,
     Minus,
     Plus,
+    Verified,
 } from "lucide-react"
 
 const bookingOptions = [
@@ -110,9 +111,15 @@ const monthNames = [
     "November",
     "December",
 ]
-const dayNames = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+const dayNames = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
-export function TourBookingSidebar() {
+// Define props
+interface Props {
+    tourData: any;
+}
+
+export function TourBookingSidebar({ tourData }: Props) {
+    // Define state
     const [selectedDate, setSelectedDate] = useState<Date | null>(null)
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [showTravelerPicker, setShowTravelerPicker] = useState(false)
@@ -201,17 +208,19 @@ export function TourBookingSidebar() {
 
     return (
         <>
-            <div className="hidden md:block">
+            <div className="">
                 <div className="border border-gray-200 rounded-xl p-4 md:p-6 shadow-sm bg-white">
-                    {/* Price */}
                     <div className="mb-4 md:mb-6">
                         <div className="flex items-baseline gap-2">
                             <span className="text-sm text-gray-500">From</span>
-                            <span className="text-2xl md:text-3xl font-bold text-gray-900">$54.45</span>
-                            <span className="text-gray-500 text-sm md:text-base">per person</span>
+                            <span className="text-2xl md:text-3xl font-bold text-gray-900">
+                                {tourData?.tour?.discount_price}
+                            </span>
+                            <span className="text-gray-500 text-sm md:text-base">
+                                {tourData?.pricing_info?.type == 'PER_PERSON' ? 'per person' : 'per group'}
+                            </span>
                         </div>
                     </div>
-
                     <div className="mb-3 md:mb-4 relative">
                         <label className="block text-sm font-medium text-gray-700 mb-2">Select date</label>
                         <button
@@ -231,10 +240,8 @@ export function TourBookingSidebar() {
                                 className={`h-4 w-4 md:h-5 md:w-5 text-gray-400 transition-transform ${showDatePicker ? "rotate-180" : ""}`}
                             />
                         </button>
-
                         {showDatePicker && (
                             <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 p-3 md:p-4">
-                                {/* Month Navigation */}
                                 <div className="flex items-center justify-between mb-3 md:mb-4">
                                     <button
                                         onClick={goToPreviousMonth}
@@ -250,8 +257,6 @@ export function TourBookingSidebar() {
                                         <ChevronRight className="h-4 w-4 md:h-5 md:w-5 text-gray-600" />
                                     </button>
                                 </div>
-
-                                {/* Day Names */}
                                 <div className="grid grid-cols-7 gap-1 mb-2">
                                     {dayNames.map((day) => (
                                         <div key={day} className="text-center text-xs font-medium text-gray-500 py-1">
@@ -259,8 +264,6 @@ export function TourBookingSidebar() {
                                         </div>
                                     ))}
                                 </div>
-
-                                {/* Calendar Days */}
                                 <div className="grid grid-cols-7 gap-1">
                                     {calendarDays.map((day, index) => (
                                         <div key={index} className="aspect-square">
@@ -420,22 +423,22 @@ export function TourBookingSidebar() {
 
                     {/* Tour Info */}
                     <div className="border-t border-gray-200 pt-3 md:pt-4 space-y-2 md:space-y-3">
-                        <div className="flex items-center gap-2 md:gap-3 text-xs md:text-sm">
+                        {tourData?.duration_format && <div className="flex items-center gap-2 md:gap-3 text-xs md:text-sm">
                             <Clock className="h-3 w-3 md:h-4 md:w-4 text-gray-400" />
-                            <span className="text-gray-600">Duration: 3-4 hours</span>
-                        </div>
+                            <span className="text-gray-600">Duration: {tourData?.duration_format}</span>
+                        </div>}
                         <div className="flex items-center gap-2 md:gap-3 text-xs md:text-sm">
                             <Users className="h-3 w-3 md:h-4 md:w-4 text-gray-400" />
-                            <span className="text-gray-600">Small group: Max 12 people</span>
+                            <span className="text-gray-600">Small group: Max {tourData?.booking_requirements?.maxTravelersPerBooking} people</span>
                         </div>
                     </div>
 
                     {/* Badges */}
                     <div className="mt-3 md:mt-4 pt-3 md:pt-4 border-t border-gray-200">
                         <div className="flex flex-wrap gap-2">
-                            <span className="bg-green-100 text-green-800 text-xs font-medium px-2 md:px-2.5 py-0.5 md:py-1 rounded">
+                            {tourData?.tour?.is_refundable && <span className="bg-green-100 text-green-800 text-xs font-medium px-2 md:px-2.5 py-0.5 md:py-1 rounded">
                                 Free Cancellation
-                            </span>
+                            </span>}
                             <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 md:px-2.5 py-0.5 md:py-1 rounded">
                                 Instant Confirmation
                             </span>
@@ -445,7 +448,7 @@ export function TourBookingSidebar() {
 
                 {/* Lowest Price Guarantee */}
                 <div className="mt-3 md:mt-4 flex items-center justify-center gap-2 text-xs md:text-sm text-gray-500">
-                    <Shield className="h-3 w-3 md:h-4 md:w-4" />
+                    <Verified className="h-3 w-3 md:h-4 md:w-4 text-[#f53]" />
                     <span>Lowest Price Guarantee</span>
                 </div>
             </div>
@@ -455,9 +458,11 @@ export function TourBookingSidebar() {
                     <div>
                         <div className="flex items-baseline gap-1">
                             <span className="text-xs text-gray-500">From</span>
-                            <span className="text-xl font-bold text-gray-900">$54.45</span>
+                            <span className="text-xl font-bold text-gray-900">{tourData?.tour?.discount_price}</span>
                         </div>
-                        <p className="text-xs text-gray-500">per person</p>
+                        <p className="text-xs text-gray-500">
+                            {tourData?.pricing_info?.type == 'PER_PERSON' ? 'per person' : 'per group'}
+                        </p>
                     </div>
                     <button
                         onClick={() => setShowBookingOptions(true)}
