@@ -36,12 +36,11 @@ export function TourItinerary({ itinerary }: TourItineraryProps) {
         <section className="py-8 border-b border-gray-200">
             <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="w-full flex items-center justify-between mb-6 hover:opacity-70 transition-opacity"
+                className="w-full flex items-center justify-between mb-6 transition-opacity"
             >
                 <h2 className="text-2xl font-bold text-[#1a2b49]">Itinerary</h2>
                 <ChevronUp className={`h-6 w-6 text-gray-400 transition-transform ${isExpanded ? "" : "rotate-180"}`} />
             </button>
-
             {isExpanded && (
                 <div className="relative">
                     <div className="absolute left-4.5 top-8 bottom-0 w-1 bg-gray-300"></div>
@@ -57,21 +56,24 @@ export function TourItinerary({ itinerary }: TourItineraryProps) {
                                     <div className="mb-2">
                                         <h3 className="font-bold text-gray-900 text-base">
                                             {item.name}
-                                            <span className="font-normal text-gray-600 ml-1">Pass By</span>
+                                            {item.pass_by && <span className="font-normal text-sm text-gray-600 ml-1">(Pass By)</span>}
                                         </h3>
                                     </div>
                                     <p className="text-gray-600 text-sm leading-relaxed mb-3">
                                         {getDisplayText(item.description, index)}
                                         <button
                                             onClick={() => toggleItemExpanded(index)}
-                                            className="text-[#0057A8] hover:underline ml-1 font-medium bg-none border-none cursor-pointer p-0"
+                                            className="text-[#f53] hover:underline ml-1 font-medium bg-none border-none cursor-pointer p-0"
                                         >
                                             {expandedItems[index] ? "Show less" : "Read more"}
                                         </button>
                                     </p>
-                                    <div className="flex gap-4 text-xs text-gray-600">
-                                        <span>1 hour</span>
-                                        <span>• Admission Ticket Free</span>
+                                    <div className="flex gap-2 text-xs text-gray-600">
+                                        {item.duration && <span>{item.duration}</span>}
+                                        {item.admission_included && item.admission_included == 'YES' && <>
+                                            <span className="text-gray-300">|</span>
+                                            <span>Admission Ticket Free</span>
+                                        </>}
                                     </div>
                                 </div>
                             </div>
