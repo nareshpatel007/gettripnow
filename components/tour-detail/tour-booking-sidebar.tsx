@@ -118,36 +118,54 @@ interface Props {
     tourData: any;
 }
 
+type AgeBand = {
+    ageBand: string
+    startAge: number
+    endAge: number
+    minTravelersPerBooking: number
+    maxTravelersPerBooking: number
+}
+
+const labelMap: Record<string, string> = {
+    ADULT: 'Adults',
+    CHILD: 'Children',
+    INFANT: 'Infants',
+    TRAVELER: 'Travelers',
+}
+
 export function TourBookingSidebar({ tourData }: Props) {
     // Define state
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-    const [showDatePicker, setShowDatePicker] = useState(false)
-    const [showTravelerPicker, setShowTravelerPicker] = useState(false)
-    const [showBookingOptions, setShowBookingOptions] = useState(false)
-    const [selectedOption, setSelectedOption] = useState(1)
-    const [selectedTimeSlot, setSelectedTimeSlot] = useState("2:30 PM")
-    const [showAllOptions, setShowAllOptions] = useState(false)
-    const [expandedDescription, setExpandedDescription] = useState(false)
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [showTravelerPicker, setShowTravelerPicker] = useState(false);
+    const [showBookingOptions, setShowBookingOptions] = useState(false);
+    const [selectedOption, setSelectedOption] = useState(1);
+    const [selectedTimeSlot, setSelectedTimeSlot] = useState("2:30 PM");
+    const [showAllOptions, setShowAllOptions] = useState(false);
+    const [expandedDescription, setExpandedDescription] = useState(false);
 
-    const today = new Date()
-    const [currentMonth, setCurrentMonth] = useState(today.getMonth())
-    const [currentYear, setCurrentYear] = useState(today.getFullYear())
+    const today = new Date();
+    const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+    const [currentYear, setCurrentYear] = useState(today.getFullYear());
 
-    const [adults, setAdults] = useState(2)
-    const [children, setChildren] = useState(0)
-    const [infants, setInfants] = useState(0)
+    // Define traveler state
+    const [adults, setAdults] = useState(0);
+    const [children, setChildren] = useState(0);
+    const [infants, setInfants] = useState(0);
+    const [travelers, setTravelers] = useState(0);
 
-    const calendarDays = generateMonthCalendar(currentYear, currentMonth)
-    const currentOption = bookingOptions.find((opt) => opt.id === selectedOption)
+    // Generate calendar
+    const calendarDays = generateMonthCalendar(currentYear, currentMonth);
+    const currentOption = bookingOptions.find((opt) => opt.id === selectedOption);
 
-    const totalTravelers = adults + children + infants
+    // const totalTravelers = adults + children + infants;
 
     const goToPreviousMonth = () => {
         if (currentMonth === 0) {
-            setCurrentMonth(11)
-            setCurrentYear(currentYear - 1)
+            setCurrentMonth(11);
+            setCurrentYear(currentYear - 1);
         } else {
-            setCurrentMonth(currentMonth - 1)
+            setCurrentMonth(currentMonth - 1);
         }
     }
 
@@ -176,21 +194,22 @@ export function TourBookingSidebar({ tourData }: Props) {
     }
 
     const formatSelectedDate = () => {
-        if (!selectedDate) return "Choose a date"
+        if (!selectedDate) return "Choose a date";
         return selectedDate.toLocaleDateString("en-US", {
             weekday: "short",
             month: "short",
             day: "numeric",
             year: "numeric",
-        })
+        });
     }
 
     const formatTravelers = () => {
-        const parts = []
-        if (adults > 0) parts.push(`${adults} Adult${adults > 1 ? "s" : ""}`)
-        if (children > 0) parts.push(`${children} Child${children > 1 ? "ren" : ""}`)
-        if (infants > 0) parts.push(`${infants} Infant${infants > 1 ? "s" : ""}`)
-        return parts.length > 0 ? parts.join(", ") : "0 Travelers"
+        const parts: any = [];
+        if (adults > 0) parts.push(`${adults} Adult${adults > 1 ? "s" : ""}`);
+        if (children > 0) parts.push(`${children} Child${children > 1 ? "ren" : ""}`);
+        if (infants > 0) parts.push(`${infants} Infant${infants > 1 ? "s" : ""}`);
+        if (travelers > 0) parts.push(`${travelers} Traveler${travelers > 1 ? "s" : ""}`);
+        return parts.length > 0 ? parts.join(", ") : "Choose Travelers";
     }
 
     const handleCheckAvailability = () => {
@@ -201,22 +220,70 @@ export function TourBookingSidebar({ tourData }: Props) {
         setShowBookingOptions(true)
     }
 
-    const visibleOptions = showAllOptions ? bookingOptions : bookingOptions.slice(0, 4)
+    // Update traveler count
+    const updateTravellerCount = (action: string, band: AgeBand) => {
+        if (action === "plus") {
+            if (band.ageBand === "ADULT") {
+                // If adults is less than max adults
+                if (adults < band.maxTravelersPerBooking) {
+                    setAdults(adults + 1);
+                }
+            } else if (band.ageBand === "CHILD") {
+                // If children is less than max children
+                if (children < band.maxTravelersPerBooking) {
+                    setChildren(children + 1);
+                }
+            } else if (band.ageBand === "INFANT") {
+                // If infants is less than max infants
+                if (infants < band.maxTravelersPerBooking) {
+                    setInfants(infants + 1);
+                }
+            } else if (band.ageBand === "TRAVELER") {
+                // If travelers is less than max travelers
+                if (travelers < band.maxTravelersPerBooking) {
+                    setTravelers(travelers + 1);
+                }
+            }
+        } else {
+            if (band.ageBand === "ADULT") {
+                // If adults is greater than min adults
+                if (adults > band.minTravelersPerBooking) {
+                    setAdults(adults - 1);
+                }
+            } else if (band.ageBand === "CHILD") {
+                // If children is greater than min children
+                if (children > band.minTravelersPerBooking) {
+                    setChildren(children - 1);
+                }
+            } else if (band.ageBand === "INFANT") {
+                // If infants is greater than min infants
+                if (infants > band.minTravelersPerBooking) {
+                    setInfants(infants - 1);
+                }
+            } else if (band.ageBand === "TRAVELER") {
+                // If travelers is greater than min travelers
+                if (travelers > band.minTravelersPerBooking) {
+                    setTravelers(travelers - 1);
+                }
+            }
+        }
+    }
 
-    const canGoPrevious =
-        currentYear > today.getFullYear() || (currentYear === today.getFullYear() && currentMonth > today.getMonth())
+    const visibleOptions = showAllOptions ? bookingOptions : bookingOptions.slice(0, 4);
+
+    const canGoPrevious = currentYear > today.getFullYear() || (currentYear === today.getFullYear() && currentMonth > today.getMonth());
 
     return (
         <>
-            <div className="">
+            <div className="mt-5 md:mt-0">
                 <div className="border border-gray-200 rounded-xl p-4 md:p-6 shadow-sm bg-white">
                     <div className="mb-4 md:mb-6">
                         <div className="flex items-baseline gap-2">
-                            <span className="text-sm text-gray-500">From</span>
-                            <span className="text-2xl md:text-3xl font-bold text-gray-900">
-                                {tourData?.tour?.discount_price}
+                            <span className="text-md text-gray-600">From</span>
+                            <span className="text-2xl md:text-3xl font-bold text-[#1a2b49]">
+                                ${tourData?.tour?.discount_price}
                             </span>
-                            <span className="text-gray-500 text-sm md:text-base">
+                            <span className="text-gray-600 text-sm">
                                 {tourData?.pricing_info?.type == 'PER_PERSON' ? 'per person' : 'per group'}
                             </span>
                         </div>
@@ -228,7 +295,7 @@ export function TourBookingSidebar({ tourData }: Props) {
                                 setShowDatePicker(!showDatePicker)
                                 setShowTravelerPicker(false)
                             }}
-                            className="w-full flex items-center justify-between border border-gray-300 rounded-lg px-3 md:px-4 py-2.5 md:py-3 text-left hover:border-gray-400 transition-colors"
+                            className="w-full flex items-center justify-between border border-gray-300 rounded-lg px-3 md:px-4 py-2.5 text-left hover:border-gray-400 cursor-pointer transition-colors"
                         >
                             <div className="flex items-center gap-2 md:gap-3">
                                 <Calendar className="h-4 w-4 md:h-5 md:w-5 text-gray-400" />
@@ -246,14 +313,14 @@ export function TourBookingSidebar({ tourData }: Props) {
                                     <button
                                         onClick={goToPreviousMonth}
                                         disabled={!canGoPrevious}
-                                        className={`p-1 rounded-full ${canGoPrevious ? "hover:bg-gray-100" : "opacity-30 cursor-not-allowed"}`}
+                                        className={`p-1 rounded-full cursor-pointer ${canGoPrevious ? "hover:bg-gray-100" : "opacity-30 cursor-not-allowed"}`}
                                     >
                                         <ChevronLeft className="h-4 w-4 md:h-5 md:w-5 text-gray-600" />
                                     </button>
-                                    <span className="font-semibold text-gray-900 text-sm md:text-base">
+                                    <span className="font-semibold text-[#1a2b49] text-sm md:text-base">
                                         {monthNames[currentMonth]} {currentYear}
                                     </span>
-                                    <button onClick={goToNextMonth} className="p-1 rounded-full hover:bg-gray-100">
+                                    <button onClick={goToNextMonth} className="p-1 rounded-full hover:bg-gray-100 cursor-pointer">
                                         <ChevronRight className="h-4 w-4 md:h-5 md:w-5 text-gray-600" />
                                     </button>
                                 </div>
@@ -276,11 +343,11 @@ export function TourBookingSidebar({ tourData }: Props) {
                                                         }
                                                     }}
                                                     disabled={isDateInPast(day)}
-                                                    className={`w-full h-full flex items-center justify-center text-xs md:text-sm rounded-full transition-colors ${isSelectedDate(day)
-                                                            ? "bg-[#f53] text-white"
-                                                            : isDateInPast(day)
-                                                                ? "text-gray-300 cursor-not-allowed"
-                                                                : "hover:bg-gray-100 text-gray-700"
+                                                    className={`w-full h-full flex items-center justify-center text-xs cursor-pointer md:text-sm rounded-full transition-colors ${isSelectedDate(day)
+                                                        ? "bg-[#f53] text-white"
+                                                        : isDateInPast(day)
+                                                            ? "text-gray-300 cursor-not-allowed"
+                                                            : "hover:bg-gray-100 text-gray-700"
                                                         }`}
                                                 >
                                                     {day}
@@ -302,110 +369,79 @@ export function TourBookingSidebar({ tourData }: Props) {
                                 setShowTravelerPicker(!showTravelerPicker)
                                 setShowDatePicker(false)
                             }}
-                            className="w-full flex items-center justify-between border border-gray-300 rounded-lg px-3 md:px-4 py-2.5 md:py-3 text-left hover:border-gray-400 transition-colors"
+                            className="w-full flex items-center justify-between border border-gray-300 rounded-lg px-3 md:px-4 py-2.5 text-left hover:border-gray-400 cursor-pointer transition-colors"
                         >
                             <div className="flex items-center gap-2 md:gap-3">
                                 <Users className="h-4 w-4 md:h-5 md:w-5 text-gray-400" />
-                                <span className="text-gray-900 text-sm md:text-base">{formatTravelers()}</span>
+                                <span className={`text-sm md:text-base ${selectedDate ? "text-gray-900" : "text-gray-500"}`}>
+                                    {formatTravelers()}
+                                </span>
                             </div>
                             <ChevronDown
                                 className={`h-4 w-4 md:h-5 md:w-5 text-gray-400 transition-transform ${showTravelerPicker ? "rotate-180" : ""}`}
                             />
                         </button>
-
                         {showTravelerPicker && (
                             <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 p-3 md:p-4">
-                                {/* Adults */}
-                                <div className="flex items-center justify-between py-2 md:py-3 border-b border-gray-100">
-                                    <div>
-                                        <p className="font-medium text-gray-900 text-sm md:text-base">Adults</p>
-                                        <p className="text-xs md:text-sm text-gray-500">Age 13+</p>
-                                    </div>
-                                    <div className="flex items-center gap-2 md:gap-3">
-                                        <button
-                                            onClick={() => setAdults(Math.max(1, adults - 1))}
-                                            disabled={adults <= 1}
-                                            className={`w-7 h-7 md:w-8 md:h-8 rounded-full border flex items-center justify-center transition-colors ${adults <= 1
-                                                    ? "border-gray-200 text-gray-300 cursor-not-allowed"
-                                                    : "border-gray-300 text-gray-600 hover:border-[#1a9cb0] hover:text-[#1a9cb0]"
-                                                }`}
-                                        >
-                                            <Minus className="h-3 w-3 md:h-4 md:w-4" />
-                                        </button>
-                                        <span className="w-6 md:w-8 text-center font-medium text-gray-900 text-sm md:text-base">
-                                            {adults}
-                                        </span>
-                                        <button
-                                            onClick={() => setAdults(adults + 1)}
-                                            className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-gray-300 text-gray-600 hover:border-[#1a9cb0] hover:text-[#1a9cb0] flex items-center justify-center transition-colors"
-                                        >
-                                            <Plus className="h-3 w-3 md:h-4 md:w-4" />
-                                        </button>
-                                    </div>
+                                <div className="space-y-1">
+                                    {tourData?.pricing_info?.ageBands.map((band: any, index: number) => {
+                                        let value = 0;
+                                        if(band.ageBand === 'ADULT') {
+                                            value = Number(adults);
+                                        } else if(band.ageBand === 'CHILD') {
+                                            value = Number(children);
+                                        } else if(band.ageBand === 'INFANT') {
+                                            value = Number(infants);
+                                        } else if(band.ageBand === 'TRAVELER') {
+                                            value = Number(travelers);
+                                        }
+                                        return (
+                                            <div
+                                                key={band.ageBand}
+                                                className={`flex items-center justify-between py-2 md:py-3 ${index !== tourData?.pricing_info.ageBands.length - 1 ? 'border-b border-gray-100' : ''}`}
+                                            >
+                                                <div>
+                                                    <p className="font-medium text-gray-900 text-sm md:text-base">
+                                                        {labelMap[band.ageBand] ?? band.ageBand}
+                                                    </p>
+                                                    <p className="text-xs md:text-sm text-gray-500">
+                                                        Age {band.startAge}–{band.endAge === 99 ? '+' : band.endAge}
+                                                    </p>
+                                                </div>
+                                                <div className="flex items-center gap-2 md:gap-3">
+                                                    <button
+                                                        onClick={() => updateTravellerCount('minus', band)}
+                                                        disabled={value <= band.minTravelersPerBooking}
+                                                        className={`w-6 h-6 cursor-pointer rounded-full border flex items-center justify-center
+                                                            ${value <= band.minTravelersPerBooking
+                                                                ? 'border-gray-200 text-gray-300 cursor-not-allowed'
+                                                                : 'border-gray-300 text-gray-600 hover:border-[#f53] hover:text-[#f53]'
+                                                            }`}
+                                                    >
+                                                        <Minus className="h-3 w-3 md:h-4 md:w-4" />
+                                                    </button>
+                                                    <span className="w-6 md:w-8 text-center font-medium text-gray-900 text-sm md:text-base">
+                                                        {value}
+                                                    </span>
+                                                    <button
+                                                        onClick={() => updateTravellerCount('plus', band)}
+                                                        disabled={value >= band.maxTravelersPerBooking}
+                                                        className={`w-6 h-6 cursor-pointer rounded-full border flex items-center justify-center
+                                                            ${value >= band.maxTravelersPerBooking
+                                                                ? 'border-gray-200 text-gray-300 cursor-not-allowed'
+                                                                : 'border-gray-300 text-gray-600 hover:border-[#f53] hover:text-[#f53]'
+                                                            }`}
+                                                    >
+                                                        <Plus className="h-3 w-3 md:h-4 md:w-4" />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
                                 </div>
-
-                                {/* Children */}
-                                <div className="flex items-center justify-between py-2 md:py-3 border-b border-gray-100">
-                                    <div>
-                                        <p className="font-medium text-gray-900 text-sm md:text-base">Children</p>
-                                        <p className="text-xs md:text-sm text-gray-500">Age 2-12</p>
-                                    </div>
-                                    <div className="flex items-center gap-2 md:gap-3">
-                                        <button
-                                            onClick={() => setChildren(Math.max(0, children - 1))}
-                                            disabled={children <= 0}
-                                            className={`w-7 h-7 md:w-8 md:h-8 rounded-full border flex items-center justify-center transition-colors ${children <= 0
-                                                    ? "border-gray-200 text-gray-300 cursor-not-allowed"
-                                                    : "border-gray-300 text-gray-600 hover:border-[#1a9cb0] hover:text-[#1a9cb0]"
-                                                }`}
-                                        >
-                                            <Minus className="h-3 w-3 md:h-4 md:w-4" />
-                                        </button>
-                                        <span className="w-6 md:w-8 text-center font-medium text-gray-900 text-sm md:text-base">
-                                            {children}
-                                        </span>
-                                        <button
-                                            onClick={() => setChildren(children + 1)}
-                                            className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-gray-300 text-gray-600 hover:border-[#1a9cb0] hover:text-[#1a9cb0] flex items-center justify-center transition-colors"
-                                        >
-                                            <Plus className="h-3 w-3 md:h-4 md:w-4" />
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Infants */}
-                                <div className="flex items-center justify-between py-2 md:py-3">
-                                    <div>
-                                        <p className="font-medium text-gray-900 text-sm md:text-base">Infants</p>
-                                        <p className="text-xs md:text-sm text-gray-500">Under 2</p>
-                                    </div>
-                                    <div className="flex items-center gap-2 md:gap-3">
-                                        <button
-                                            onClick={() => setInfants(Math.max(0, infants - 1))}
-                                            disabled={infants <= 0}
-                                            className={`w-7 h-7 md:w-8 md:h-8 rounded-full border flex items-center justify-center transition-colors ${infants <= 0
-                                                    ? "border-gray-200 text-gray-300 cursor-not-allowed"
-                                                    : "border-gray-300 text-gray-600 hover:border-[#1a9cb0] hover:text-[#1a9cb0]"
-                                                }`}
-                                        >
-                                            <Minus className="h-3 w-3 md:h-4 md:w-4" />
-                                        </button>
-                                        <span className="w-6 md:w-8 text-center font-medium text-gray-900 text-sm md:text-base">
-                                            {infants}
-                                        </span>
-                                        <button
-                                            onClick={() => setInfants(infants + 1)}
-                                            className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-gray-300 text-gray-600 hover:border-[#1a9cb0] hover:text-[#1a9cb0] flex items-center justify-center transition-colors"
-                                        >
-                                            <Plus className="h-3 w-3 md:h-4 md:w-4" />
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Done Button */}
                                 <button
                                     onClick={() => setShowTravelerPicker(false)}
-                                    className="w-full mt-3 md:mt-4 bg-[#f53] hover:bg-[#1A2B49] text-white font-medium py-2 md:py-2.5 rounded-lg transition-colors text-sm md:text-base"
+                                    className="w-full mt-3 md:mt-4 bg-[#f53] hover:bg-[#c34026] text-white font-medium py-2 md:py-2.5 rounded-lg transition-colors text-sm md:text-base cursor-pointer"
                                 >
                                     Done
                                 </button>
@@ -413,10 +449,9 @@ export function TourBookingSidebar({ tourData }: Props) {
                         )}
                     </div>
 
-                    {/* Check Availability Button */}
                     <button
                         onClick={handleCheckAvailability}
-                        className="w-full bg-[#f53] hover:bg-[#1A2B49] text-white font-semibold py-3 md:py-3.5 rounded-lg mb-3 md:mb-4 transition-colors text-sm md:text-base"
+                        className="w-full bg-[#f53] hover:bg-[#c34026] text-white font-semibold py-3 cursor-pointer rounded-lg mb-3 md:mb-4 transition-colors text-sm md:text-base"
                     >
                         Check Availability
                     </button>
@@ -511,8 +546,8 @@ export function TourBookingSidebar({ tourData }: Props) {
                                 <div
                                     key={option.id}
                                     className={`border rounded-lg p-4 cursor-pointer transition-all ${selectedOption === option.id
-                                            ? "border-[#1A2B49] bg-[#1A2B49]/5"
-                                            : "border-gray-200 hover:border-gray-300"
+                                        ? "border-[#1A2B49] bg-[#1A2B49]/5"
+                                        : "border-gray-200 hover:border-gray-300"
                                         }`}
                                     onClick={() => setSelectedOption(option.id)}
                                 >
@@ -546,8 +581,8 @@ export function TourBookingSidebar({ tourData }: Props) {
                                                             setSelectedTimeSlot(time)
                                                         }}
                                                         className={`px-2 py-2 text-xs rounded-lg border transition-colors cursor-pointer ${selectedTimeSlot === time
-                                                                ? "border-[#1A2B49] bg-[#1A2B49] text-white"
-                                                                : "border-gray-200 hover:border-[#1A2B49] text-gray-700"
+                                                            ? "border-[#1A2B49] bg-[#1A2B49] text-white"
+                                                            : "border-gray-200 hover:border-[#1A2B49] text-gray-700"
                                                             }`}
                                                     >
                                                         {time}

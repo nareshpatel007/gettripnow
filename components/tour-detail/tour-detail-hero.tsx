@@ -12,50 +12,18 @@ interface TourDetailHeroProps {
 
 export function TourDetailHero({ tourData }: TourDetailHeroProps) {
     // Define state
-    const [mainImage, setMainImage] = useState(0);
-    const [lightboxOpen, setLightboxOpen] = useState(false)
-    const [lightboxIndex, setLightboxIndex] = useState(0)
+    const [lightboxOpen, setLightboxOpen] = useState(false);
+    const [lightboxIndex, setLightboxIndex] = useState(0);
 
-    const images = [
-        "/people-swimming-with-stingrays-in-crystal-clear-ca.jpg",
-        "/snorkeling-colorful-coral-reef-tropical-fish-under.jpg",
-        "/family-touching-friendly-stingray-in-shallow-blue-.jpg",
-        "/tourists-on-boat-tour-in-turquoise-caribbean-sea.jpg",
-        // Additional images for the gallery
-        "/tropical-beach-paradise.png",
-        "/underwater-coral-reef.png",
-        "/boat-tour-ocean.jpg",
-        "/stingray-swimming.jpg",
-        "/snorkeling-adventure.jpg",
-        "/caribbean-sunset.jpg",
-        "/tropical-fish.jpg",
-        "/tropical-beach-getaway.png",
-        "/crystal-clear-water.jpg",
-        "/ocean-wildlife.jpg",
-        "/island-tour.jpg",
-        "/vibrant-coral-reef.png",
-        "/diving-experience.jpg",
-        "/serene-sea-turtle.png",
-        "/tropical-beach-resort.png",
-        "/water-sports.jpg",
-        "/lush-tropical-island.png",
-        "/expansive-ocean-vista.png",
-        "/kayaking-adventure.png",
-        "/sunset-cruise.png",
-        "/tropical-beach-palms.png",
-        "/blue-lagoon.jpg",
-        "/scuba-diving.jpg",
-        "/catamaran-tour.jpg",
-    ]
-
+    // Open the lightbox
     const openLightbox = (index: number) => {
-        setLightboxIndex(index)
-        setLightboxOpen(true)
+        setLightboxIndex(index);
+        setLightboxOpen(true);
     }
 
     // Close the lightbox
     const closeLightbox = () => {
-        setLightboxOpen(false)
+        setLightboxOpen(false);
     }
 
     // Go to the previous image
@@ -69,7 +37,7 @@ export function TourDetailHero({ tourData }: TourDetailHeroProps) {
         }
 
         // If the current image is not the first one, go to the previous one
-        setLightboxIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
+        setLightboxIndex((prev) => (prev === 0 ? tourData?.tour?.media_gallery.length - 1 : prev - 1));
     }
 
     // Go to the next image
@@ -78,19 +46,19 @@ export function TourDetailHero({ tourData }: TourDetailHeroProps) {
 
         // If the current image is the last one, go back to the first one
         if (lightboxIndex === tourData?.tour?.media_gallery.length - 1) {
-            setLightboxIndex(0)
+            setLightboxIndex(0);
             return;
         }
 
         // If the current image is not the last one, go to the next one
-        setLightboxIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
+        setLightboxIndex((prev) => (prev === tourData?.tour?.media_gallery.length - 1 ? 0 : prev + 1));
     }
 
     // Handle keyboard navigation
     const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === "Escape") closeLightbox()
-        if (e.key === "ArrowLeft") goToPrevious()
-        if (e.key === "ArrowRight") goToNext()
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowLeft") goToPrevious();
+        if (e.key === "ArrowRight") goToNext();
     }
 
     return (

@@ -94,11 +94,9 @@ export default function TourDetailPage() {
                 <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
                     <div className="flex-1 min-w-0">
                         <TourDetailHero tourData={tourData} />
-                        <div className="hidden sm:block flex-shrink-0">
+                        <div className="block md:hidden">
                             <TourBookingSidebar tourData={tourData} />
                         </div>
-                        {/* <WhyTravelersLoved /> */}
-                        {/* <PromotedExperiences /> */}
                         <TourOverview description={tourData?.tour?.description} />
                         <WhatsIncluded included={tourData?.inclusions} notIncluded={tourData?.exclusions} />
                         <MeetingAndPickup />
