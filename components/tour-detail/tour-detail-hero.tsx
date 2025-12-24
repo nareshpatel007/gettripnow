@@ -123,7 +123,7 @@ export function TourDetailHero({ tourData }: TourDetailHeroProps) {
                     >
                         <Image
                             src={tourData?.tour?.media_gallery[0] || "/placeholder.svg"}
-                            alt={tourData?.tour?.name}
+                            alt={tourData?.tour?.name || "Tour image"}
                             fill
                             className="object-cover hover:scale-105 transition-transform duration-300"
                         />

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import { ChevronDown, CornerDownRightIcon } from "lucide-react";
+import { ChevronUp } from "lucide-react";
 
 // Define props
 interface TourItineraryProps {
@@ -9,33 +9,76 @@ interface TourItineraryProps {
 }
 
 export function TourItinerary({ itinerary }: TourItineraryProps) {
+    // Define state
+    const [isExpanded, setIsExpanded] = useState(true);
+    const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>({});
+
+    // Toggle item expanded
+    const toggleItemExpanded = (index: number) => {
+        setExpandedItems((prev) => ({
+            ...prev,
+            [index]: !prev[index],
+        }))
+    }
+
+    // Get display text
+    const getDisplayText = (description: string, index: number) => {
+        if (expandedItems[index]) return description;
+
+        const words = description.split(" ");
+        if (words.length > 30) {
+            return words.slice(0, 30).join(" ") + "...";
+        }
+        return description;
+    }
+
     return (
         <section className="py-8 border-b border-gray-200">
-            <h2 className="text-xl font-bold text-[#1a2b49] mb-4">Itinerary</h2>
-            <div className="space-y-2">
-                {itinerary?.itineraryItems.map((item: any, index: number) => (
-                    <div key={index} className="border border-gray-200 rounded-lg overflow-hidden">
-                        <button className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors">
-                            <div className="flex items-center gap-3">
-                                {item?.pass_by && <div className="flex w-[5%] items-center justify-center w-8 h-8 rounded-full bg-white text-[#f53] text-sm font-medium">
-                                    <CornerDownRightIcon className="h-5 w-5 text-[#f53]" />
-                                </div>}
+            <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="w-full flex items-center justify-between mb-6 hover:opacity-70 transition-opacity"
+            >
+                <h2 className="text-2xl font-bold text-[#1a2b49]">Itinerary</h2>
+                <ChevronUp className={`h-6 w-6 text-gray-400 transition-transform ${isExpanded ? "" : "rotate-180"}`} />
+            </button>
 
-                                {!item?.pass_by && <div className="flex w-[5%] items-center justify-center w-8 h-8 rounded-full bg-[#f53] text-white text-sm font-medium">{item.no}</div>}
-                                <div className="w-[95%]">
-                                    <h3 className="font-medium text-[#1a2b49]">{item.name}</h3>
-                                    <p className="text-sm text-gray-500">{item.description}</p>
+            {isExpanded && (
+                <div className="relative">
+                    <div className="absolute left-4.5 top-8 bottom-0 w-1 bg-gray-300"></div>
+                    <div className="space-y-6">
+                        {itinerary?.itineraryItems.map((item: any, index: number) => (
+                            <div key={index} className="flex gap-6">
+                                <div className="flex-shrink-0 relative">
+                                    <div className="w-10 h-10 rounded-full bg-[#f53] text-white flex items-center justify-center font-bold text-lg">
+                                        {item.no}
+                                    </div>
+                                </div>
+                                <div className="flex-1 pt-1">
+                                    <div className="mb-2">
+                                        <h3 className="font-bold text-gray-900 text-base">
+                                            {item.name}
+                                            <span className="font-normal text-gray-600 ml-1">Pass By</span>
+                                        </h3>
+                                    </div>
+                                    <p className="text-gray-600 text-sm leading-relaxed mb-3">
+                                        {getDisplayText(item.description, index)}
+                                        <button
+                                            onClick={() => toggleItemExpanded(index)}
+                                            className="text-[#0057A8] hover:underline ml-1 font-medium bg-none border-none cursor-pointer p-0"
+                                        >
+                                            {expandedItems[index] ? "Show less" : "Read more"}
+                                        </button>
+                                    </p>
+                                    <div className="flex gap-4 text-xs text-gray-600">
+                                        <span>1 hour</span>
+                                        <span>• Admission Ticket Free</span>
+                                    </div>
                                 </div>
                             </div>
-                        </button>
-                        {/* {openStops.includes(index) && (
-                            <div className="px-4 pb-4 pl-16">
-                                <p className="text-gray-600">{stop.description}</p>
-                            </div>
-                        )} */}
+                        ))}
                     </div>
-                ))}
-            </div>
+                </div>
+            )}
         </section>
     )
 }
