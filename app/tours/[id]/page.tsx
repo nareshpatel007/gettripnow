@@ -102,13 +102,18 @@ export default function TourDetailPage() {
                         <MeetingAndPickup />
                         <TourItinerary itinerary={tourData?.itinerary} />
                         <AdditionalInfo additionalInfo={tourData?.additional_info} />
-                        <CancellationPolicy />
-                        <TravelerPhotos />
-                        <TravelerTips />
-                        <TourReviews />
+                        <CancellationPolicy policy={tourData?.cancellation_policy} />
+                        <TravelerPhotos photos={tourData?.traveller_photos} />
+                        {/* <TravelerTips /> */}
+                        <TourReviews
+                            total_reviews={tourData?.tour?.total_reviews}
+                            average_rating={tourData?.tour?.average_rating}
+                            summary={tourData?.reviews?.summary}
+                            reviews={tourData?.reviews?.reviews}
+                        />
                         <SimilarExperiences />
                         <AlsoBought />
-                        <RecentlyViewed />
+                        {/* <RecentlyViewed /> */}
                     </div>
                     <div className="hidden md:block lg:block lg:w-[380px] flex-shrink-0">
                         <div className="sticky top-4">

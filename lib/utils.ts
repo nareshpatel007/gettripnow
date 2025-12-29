@@ -6,6 +6,15 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
 }
 
+// Format only date
+export function formatDate(date: Date) {
+    return new Date(date).toLocaleDateString('en-US', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+    });
+}
+
 // Format number format
 export function formatPrice(price: any, decimal = 2) {
     // Format price

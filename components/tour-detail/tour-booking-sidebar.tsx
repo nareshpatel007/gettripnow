@@ -15,6 +15,7 @@ import {
     Plus,
     Verified,
 } from "lucide-react"
+import { formatPrice } from "@/lib/utils"
 
 const bookingOptions = [
     {
@@ -53,50 +54,35 @@ const bookingOptions = [
         perGroup: true,
         maxPeople: 6,
         timeSlots: ["8:00 AM", "9:00 AM", "10:00 AM", "1:00 PM", "2:00 PM"],
-    },
-    {
-        id: 3,
-        name: "23' Concept - 1.5HR",
-        description:
-            "Quick Stingray City visit - Perfect for those short on time but wanting to experience the famous Stingray City sandbar.",
-        price: 550,
-        perGroup: true,
-        maxPeople: 6,
-        timeSlots: ["8:00 AM", "10:00 AM", "12:00 PM", "2:00 PM", "4:00 PM"],
-    },
-    {
-        id: 4,
-        name: "28' Scout - 2HR",
-        description:
-            "Stingray City Express - A quick but memorable trip to swim with the stingrays at the world-famous sandbar.",
-        price: 775,
-        perGroup: true,
-        maxPeople: 8,
-        timeSlots: ["7:00 AM", "9:00 AM", "11:00 AM", "1:00 PM", "3:00 PM"],
-    },
+    }
 ]
 
+// Generate the calendar for a specific month
 const generateMonthCalendar = (year: number, month: number) => {
-    const firstDay = new Date(year, month, 1)
-    const lastDay = new Date(year, month + 1, 0)
-    const daysInMonth = lastDay.getDate()
-    const startingDay = firstDay.getDay() // 0 = Sunday
+    // Get the first and last day of the month
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDay = firstDay.getDay();
 
-    const days: (number | null)[] = []
+    // Create an array to hold the days
+    const days: (number | null)[] = [];
 
     // Add empty slots for days before the first day of the month
     for (let i = 0; i < startingDay; i++) {
-        days.push(null)
+        days.push(null);
     }
 
     // Add the days of the month
     for (let i = 1; i <= daysInMonth; i++) {
-        days.push(i)
+        days.push(i);
     }
 
-    return days
+    // Return response
+    return days;
 }
 
+// Define months and days
 const monthNames = [
     "January",
     "February",
@@ -119,15 +105,28 @@ interface Props {
 }
 
 type AgeBand = {
-    ageBand: string
-    startAge: number
-    endAge: number
-    minTravelersPerBooking: number
-    maxTravelersPerBooking: number
+    age: string
+    start: number
+    end: number
+    min: number
+    max: number
 }
 
+// Define age sequence
+const AGE_SEQUENCE = [
+    'ADULT',
+    'SENIOR',
+    'YOUTH',
+    'CHILD',
+    'INFANT',
+    'TRAVELER',
+];
+
+// Define label map
 const labelMap: Record<string, string> = {
     ADULT: 'Adults',
+    SENIOR: 'Seniors',
+    YOUTH: 'Youth',
     CHILD: 'Children',
     INFANT: 'Infants',
     TRAVELER: 'Travelers',
@@ -149,10 +148,17 @@ export function TourBookingSidebar({ tourData }: Props) {
     const [currentYear, setCurrentYear] = useState(today.getFullYear());
 
     // Define traveler state
-    const [adults, setAdults] = useState(0);
+    const [adults, setAdults] = useState(2);
+    const [seniors, setSeniors] = useState(0);
+    const [youths, setYouths] = useState(0);
     const [children, setChildren] = useState(0);
     const [infants, setInfants] = useState(0);
     const [travelers, setTravelers] = useState(0);
+
+    // Sort age bands
+    const sortedAgeBands = [...(tourData?.pricing_info?.ageBands ?? [])].sort(
+        (a, b) => AGE_SEQUENCE.indexOf(a.age) - AGE_SEQUENCE.indexOf(b.age)
+    );
 
     // Generate calendar
     const calendarDays = generateMonthCalendar(currentYear, currentMonth);
@@ -223,46 +229,46 @@ export function TourBookingSidebar({ tourData }: Props) {
     // Update traveler count
     const updateTravellerCount = (action: string, band: AgeBand) => {
         if (action === "plus") {
-            if (band.ageBand === "ADULT") {
+            if (band.age === "ADULT") {
                 // If adults is less than max adults
-                if (adults < band.maxTravelersPerBooking) {
+                if (adults < band.max) {
                     setAdults(adults + 1);
                 }
-            } else if (band.ageBand === "CHILD") {
+            } else if (band.age === "CHILD") {
                 // If children is less than max children
-                if (children < band.maxTravelersPerBooking) {
+                if (children < band.max) {
                     setChildren(children + 1);
                 }
-            } else if (band.ageBand === "INFANT") {
+            } else if (band.age === "INFANT") {
                 // If infants is less than max infants
-                if (infants < band.maxTravelersPerBooking) {
+                if (infants < band.max) {
                     setInfants(infants + 1);
                 }
-            } else if (band.ageBand === "TRAVELER") {
+            } else if (band.age === "TRAVELER") {
                 // If travelers is less than max travelers
-                if (travelers < band.maxTravelersPerBooking) {
+                if (travelers < band.max) {
                     setTravelers(travelers + 1);
                 }
             }
         } else {
-            if (band.ageBand === "ADULT") {
+            if (band.age === "ADULT") {
                 // If adults is greater than min adults
-                if (adults > band.minTravelersPerBooking) {
+                if (adults > band.min) {
                     setAdults(adults - 1);
                 }
-            } else if (band.ageBand === "CHILD") {
+            } else if (band.age === "CHILD") {
                 // If children is greater than min children
-                if (children > band.minTravelersPerBooking) {
+                if (children > band.min) {
                     setChildren(children - 1);
                 }
-            } else if (band.ageBand === "INFANT") {
+            } else if (band.age === "INFANT") {
                 // If infants is greater than min infants
-                if (infants > band.minTravelersPerBooking) {
+                if (infants > band.min) {
                     setInfants(infants - 1);
                 }
-            } else if (band.ageBand === "TRAVELER") {
+            } else if (band.age === "TRAVELER") {
                 // If travelers is greater than min travelers
-                if (travelers > band.minTravelersPerBooking) {
+                if (travelers > band.min) {
                     setTravelers(travelers - 1);
                 }
             }
@@ -278,15 +284,24 @@ export function TourBookingSidebar({ tourData }: Props) {
             <div className="mt-5 md:mt-0">
                 <div className="border border-gray-200 rounded-xl p-4 md:p-6 shadow-sm bg-white">
                     <div className="mb-4 md:mb-6">
-                        <div className="flex items-baseline gap-2">
+                        {tourData?.tour?.selling_price && tourData?.tour?.discount_price != tourData?.tour?.selling_price && (
+                            <div className="flex items-baseline gap-2">
+                                <span className="bg-red-100 text-red-800 text-xs font-medium px-2 md:px-2.5 py-0.5 md:py-1 rounded mb-2">Special Offer</span>
+                            </div>
+                        )}
+                        <div className="flex items-baseline gap-2 mb-1">
                             <span className="text-md text-gray-600">From</span>
-                            <span className="text-2xl md:text-3xl font-bold text-[#1a2b49]">
-                                ${tourData?.tour?.discount_price}
-                            </span>
+                            <span className="text-2xl font-bold text-[#1a2b49]">${formatPrice(tourData?.tour?.discount_price)}</span>
                             <span className="text-gray-600 text-sm">
                                 {tourData?.pricing_info?.type == 'PER_PERSON' ? 'per person' : 'per group'}
                             </span>
                         </div>
+                        {tourData?.tour?.selling_price && tourData?.tour?.discount_price != tourData?.tour?.selling_price && (
+                            <>
+                                <span className="text-sm md:text-base text-gray-600">Was </span>
+                                <span className="text-sm md:text-base text-gray-600 text-semibold line-through">${formatPrice(tourData?.tour?.selling_price)}</span>
+                            </>
+                        )}
                     </div>
                     <div className="mb-3 md:mb-4 relative">
                         <label className="block text-sm font-medium text-gray-700 mb-2">Select date</label>
@@ -381,53 +396,49 @@ export function TourBookingSidebar({ tourData }: Props) {
                                 className={`h-4 w-4 md:h-5 md:w-5 text-gray-400 transition-transform ${showTravelerPicker ? "rotate-180" : ""}`}
                             />
                         </button>
-                        {showTravelerPicker && (
+                        {sortedAgeBands && showTravelerPicker && (
                             <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 p-3 md:p-4">
                                 <div className="space-y-1">
-                                    {tourData?.pricing_info?.ageBands.map((band: any, index: number) => {
-                                        let value = 0;
-                                        if(band.ageBand === 'ADULT') {
-                                            value = Number(adults);
-                                        } else if(band.ageBand === 'CHILD') {
-                                            value = Number(children);
-                                        } else if(band.ageBand === 'INFANT') {
-                                            value = Number(infants);
-                                        } else if(band.ageBand === 'TRAVELER') {
-                                            value = Number(travelers);
-                                        }
+                                    {sortedAgeBands.map((band: any, index: number) => {
+                                        let value = band.min ?? 0;
+
+                                        if (band.age === 'ADULT') value = Number(adults) ?? band.min;
+                                        else if (band.age === 'CHILD') value = Number(children) ?? band.min;
+                                        else if (band.age === 'INFANT') value = Number(infants) ?? band.min;
+                                        else if (band.age === 'TRAVELER') value = Number(travelers) ?? band.min;
                                         return (
                                             <div
-                                                key={band.ageBand}
+                                                key={band.age}
                                                 className={`flex items-center justify-between py-2 md:py-3 ${index !== tourData?.pricing_info.ageBands.length - 1 ? 'border-b border-gray-100' : ''}`}
                                             >
                                                 <div>
-                                                    <p className="font-medium text-gray-900 text-sm md:text-base">
-                                                        {labelMap[band.ageBand] ?? band.ageBand}
+                                                    <p className="font-medium text-gray-900 text-xs">
+                                                        {labelMap[band.age] ?? band.age} (Age {band.start}–{band.end})
                                                     </p>
-                                                    <p className="text-xs md:text-sm text-gray-500">
-                                                        Age {band.startAge}–{band.endAge === 99 ? '+' : band.endAge}
+                                                    <p className="text-xs text-gray-500">
+                                                        Minimum: {band.min}, Maximum: {band.max}
                                                     </p>
                                                 </div>
-                                                <div className="flex items-center gap-2 md:gap-3">
+                                                <div className="flex items-center gap-1">
                                                     <button
                                                         onClick={() => updateTravellerCount('minus', band)}
-                                                        disabled={value <= band.minTravelersPerBooking}
+                                                        disabled={value <= band.min}
                                                         className={`w-6 h-6 cursor-pointer rounded-full border flex items-center justify-center
-                                                            ${value <= band.minTravelersPerBooking
+                                                            ${value <= band.min
                                                                 ? 'border-gray-200 text-gray-300 cursor-not-allowed'
                                                                 : 'border-gray-300 text-gray-600 hover:border-[#f53] hover:text-[#f53]'
                                                             }`}
                                                     >
                                                         <Minus className="h-3 w-3 md:h-4 md:w-4" />
                                                     </button>
-                                                    <span className="w-6 md:w-8 text-center font-medium text-gray-900 text-sm md:text-base">
+                                                    <span className="w-6 md:w-8 text-center font-medium text-gray-900 text-sm">
                                                         {value}
                                                     </span>
                                                     <button
                                                         onClick={() => updateTravellerCount('plus', band)}
-                                                        disabled={value >= band.maxTravelersPerBooking}
+                                                        disabled={value >= band.max}
                                                         className={`w-6 h-6 cursor-pointer rounded-full border flex items-center justify-center
-                                                            ${value >= band.maxTravelersPerBooking
+                                                            ${value >= band.max
                                                                 ? 'border-gray-200 text-gray-300 cursor-not-allowed'
                                                                 : 'border-gray-300 text-gray-600 hover:border-[#f53] hover:text-[#f53]'
                                                             }`}
@@ -464,15 +475,21 @@ export function TourBookingSidebar({ tourData }: Props) {
                         </div>}
                         <div className="flex items-center gap-2 md:gap-3 text-xs md:text-sm">
                             <Users className="h-3 w-3 md:h-4 md:w-4 text-gray-400" />
-                            <span className="text-gray-600">Small group: Max {tourData?.booking_requirements?.maxTravelersPerBooking} people</span>
+                            <span className="text-gray-600">
+                                Group Size: Max {tourData?.booking_requirements?.maxTravelersPerBooking} people
+                            </span>
                         </div>
                     </div>
-
-                    {/* Badges */}
                     <div className="mt-3 md:mt-4 pt-3 md:pt-4 border-t border-gray-200">
                         <div className="flex flex-wrap gap-2">
-                            {tourData?.tour?.is_refundable && <span className="bg-green-100 text-green-800 text-xs font-medium px-2 md:px-2.5 py-0.5 md:py-1 rounded">
+                            {tourData?.cancellation_policy?.type == 'STANDARD' && <span className="bg-green-100 text-green-800 text-xs font-medium px-2 md:px-2.5 py-0.5 md:py-1 rounded">
                                 Free Cancellation
+                            </span>}
+                            {tourData?.cancellation_policy?.type == 'ALL_SALES_FINAL' && <span className="bg-red-100 text-red-800 text-xs font-medium px-2 md:px-2.5 py-0.5 md:py-1 rounded">
+                                Non refundable
+                            </span>}
+                            {tourData?.cancellation_policy?.type == 'CUSTOM' && <span className="bg-green-100 text-green-800 text-xs font-medium px-2 md:px-2.5 py-0.5 md:py-1 rounded">
+                                Partially refundable
                             </span>}
                             <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 md:px-2.5 py-0.5 md:py-1 rounded">
                                 Instant Confirmation
@@ -480,8 +497,6 @@ export function TourBookingSidebar({ tourData }: Props) {
                         </div>
                     </div>
                 </div>
-
-                {/* Lowest Price Guarantee */}
                 <div className="mt-3 md:mt-4 flex items-center justify-center gap-2 text-xs md:text-sm text-gray-500">
                     <Verified className="h-3 w-3 md:h-4 md:w-4 text-[#f53]" />
                     <span>Lowest Price Guarantee</span>

@@ -22,19 +22,19 @@ export function TourItinerary({ itinerary }: TourItineraryProps) {
     }
 
     // Get display text
-    const getDisplayText = (description: string, index: number) => {
+    const getDisplayText = (description: string, index: number, maxLength: number = 30) => {
         // Count total words
         const words = description.split(" ");
 
         // If item expanded
         if (expandedItems[index]) return description;
 
-        // If total words less than 30
-        if (words.length < 30) return description;
+        // If total words less than maxLength
+        if (words.length < maxLength) return description;
 
         // If more words
-        if (words.length > 30) {
-            return words.slice(0, 30).join(" ") + "...";
+        if (words.length > maxLength) {
+            return words.slice(0, maxLength).join(" ") + "...";
         }
 
         // Else show full
@@ -54,25 +54,25 @@ export function TourItinerary({ itinerary }: TourItineraryProps) {
                 <div className="relative">
                     <div className="absolute left-4.5 top-8 bottom-0 w-1 bg-gray-300"></div>
                     <div className="space-y-6">
-                        {itinerary?.itineraryItems.map((item: any, index: number) => (
+                        {itinerary?.list && itinerary?.list.map((item: any, index: number) => (
                             <div key={index} className="flex gap-6">
                                 <div className="flex-shrink-0 relative">
                                     <div className="w-10 h-10 rounded-full bg-[#f53] text-white flex items-center justify-center font-bold text-lg">
-                                        {item.pass_by && <CornerDownRightIcon className="w-5 h-5 text-white" />}
-                                        {!item.pass_by && item.no}
+                                        {item.pass_by == true && <CornerDownRightIcon className="w-5 h-5 text-white" />}
+                                        {item.pass_by == false && <span className="text-md">{item.no}</span>}
                                     </div>
                                 </div>
                                 <div className="flex-1 pt-1">
                                     <div className="mb-2">
                                         <h3 className="font-bold text-gray-900 text-base">
                                             {item.name}
-                                            {item.pass_by && <span className="font-normal text-sm text-gray-600 ml-1">(Pass By)</span>}
+                                            {item.pass_by == true && <span className="font-normal text-sm text-gray-600 ml-1">(Pass By)</span>}
                                         </h3>
                                     </div>
                                     <p className="text-gray-600 text-sm leading-relaxed mb-3">
-                                        {getDisplayText(item.description, index)}
+                                        {getDisplayText(item.description, index, 50)}
 
-                                        {item.description && item.description.split(" ").length > 30 && <button
+                                        {item.description && item.description.split(" ").length > 50 && <button
                                             onClick={() => toggleItemExpanded(index)}
                                             className="text-[#f53] hover:underline ml-1 font-medium bg-none border-none cursor-pointer p-0"
                                         >
