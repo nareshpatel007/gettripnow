@@ -142,7 +142,7 @@ export function TourFilters({
                                     </div>
                                 </div>
                                 <div className="p-4 space-y-6">
-                                    {filterOptions?.countries && (
+                                    {filterOptions?.countries && filterOptions?.countries.length > 1 && (
                                         <div>
                                             <button
                                                 onClick={() => toggleSection("country")}
@@ -185,7 +185,7 @@ export function TourFilters({
                                         </div>
                                     )}
 
-                                    {filterOptions?.durations && (
+                                    {filterOptions?.durations && filterOptions?.durations.length > 1 && (
                                         <div>
                                             <button
                                                 onClick={() => toggleSection("duration")}
@@ -220,7 +220,7 @@ export function TourFilters({
                                         </div>
                                     )}
                                     
-                                    {filterOptions?.ratings && (
+                                    {filterOptions?.ratings && filterOptions?.ratings.length > 1 && (
                                         <div>
                                             <button
                                                 onClick={() => toggleSection("ratings")}

@@ -24,7 +24,7 @@ import { TourTagsList } from "@/components/tour-detail/tags-list";
 export default function TourDetailPage() {
     // Get slug
     const params = useParams();
-    const slug = params?.id;
+    const slug = params?.slug;
 
     // Define state
     const [isLoading, setIsLoading] = useState(false);

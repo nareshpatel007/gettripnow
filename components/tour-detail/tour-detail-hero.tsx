@@ -81,6 +81,8 @@ export function TourDetailHero({ tourData }: TourDetailHeroProps) {
                     <span className="flex text-gray-600 items-center text-sm">
                         <Verified className="inline-block h-4 w-4 mr-1 text-[#f53]" /> Recommended by 95% of travelers
                     </span>
+                    <span className="text-gray-300">|</span>
+                    <span className="flex text-gray-600 items-center text-sm">{tourData?.product_code}</span>
                 </div>
             </div>
             <div className="mb-4">

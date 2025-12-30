@@ -21,7 +21,7 @@ export function CancellationPolicy({ policy }: CancellationPolicyProps) {
                                 <CheckIcon className="inline w-4 h-4 text-[#f53] mr-1" /> Supplier of this tour may cancel on account of weather conditions.
                             </p>}
                             {policy?.traveler == true && <p className="text-gray-600 text-sm mb-3">
-                                <CheckIcon className="inline w-4 h-4 text-[#f53] mr-1" /> Supplier of this product can cancel due to too few participants.
+                                <CheckIcon className="inline w-4 h-4 text-[#f53] mr-1" /> Supplier of this tour can cancel due to too few participants.
                             </p>}
                         </div>
                     </div>
