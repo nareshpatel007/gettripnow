@@ -5,6 +5,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { LoginModal } from "./login-modal"
 import { PlanTripModal } from "./plan-trip-modal"
+import Image from "next/image"
 
 export function Header() {
     const [isDiscoverOpen, setIsDiscoverOpen] = useState(false)
@@ -81,9 +82,7 @@ export function Header() {
                         </button>
 
                         <Link href="/" className="flex items-center gap-1">
-                            <svg viewBox="0 0 100 24" className="h-6 md:h-7 w-auto" fill="none">
-                                <text x="0" y="18" className="text-xl font-bold" fill="#2D2D2D">GoOneTravel</text>
-                            </svg>
+                            <Image src="https://ik.imagekit.io/rxvy7dxn5/GoOneTravel/logo/GoOneTravel-Logo.jpg" alt="Logo" className="h-10 w-auto" width={100} height={34} />
                         </Link>
 
                         <div
@@ -182,7 +181,7 @@ export function Header() {
                         )}
                     </div>
 
-                    <div className="flex items-center gap-2 md:gap-5">
+                    <div className="flex items-center gap-2 md:gap-2">
                         <button
                             className="md:hidden p-2 hover:bg-gray-100 rounded-full cursor-pointer"
                             onClick={() => setShowMobileSearch(!showMobileSearch)}

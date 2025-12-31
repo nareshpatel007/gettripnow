@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { TourListingGrid } from "../tour-listing-grid";
 import { Pagination } from "../pagination";
@@ -11,10 +11,11 @@ import 'react-loading-skeleton/dist/skeleton.css';
 
 // Define props
 type Props = {
-    slug: any
+    country: any;
+    tag: any;
 }
 
-export function TagDetail({ slug }: Props) {
+export function CountryTagDetail({ country, tag }: Props) {
     // Define state
     const [isLoading, setIsLoading] = useState(false);
     const [tagData, setTagData] = useState<any>({});
@@ -43,12 +44,12 @@ export function TagDetail({ slug }: Props) {
                 setIsLoading(true);
 
                 // Fetch the data
-                const response = await fetch("/api/tags/single", {
+                const response = await fetch("/api/country/tags/single", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ slug }),
+                    body: JSON.stringify({ country, slug: tag }),
                 });
 
                 // Handle non-200 responses
@@ -75,7 +76,7 @@ export function TagDetail({ slug }: Props) {
         };
         fetchTag();
         return () => controller.abort();
-    }, [slug]);
+    }, [country, tag]);
 
     // Filter data
     useEffect(() => {

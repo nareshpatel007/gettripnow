@@ -1,6 +1,7 @@
 "use client"
 
-import { Search } from "lucide-react"
+import { AlertCircleIcon, Loader2, Search } from "lucide-react"
+import Link from "next/link"
 import { useState, useEffect } from "react"
 
 const suggestedDestinations = [
@@ -23,10 +24,17 @@ const heroSlides = [
     },
 ]
 
+// Delay for search
+const SEARCH_DELAY = 500;
+
 export function HeroSection() {
-    const [showSuggestions, setShowSuggestions] = useState(false)
-    const [searchValue, setSearchValue] = useState("")
-    const [currentSlide, setCurrentSlide] = useState(0)
+    // Define state
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [searchValue, setSearchValue] = useState("");
+    const [currentSlide, setCurrentSlide] = useState(0);
+    const [isStartSearch, setIsStartSearch] = useState(false);
+    const [isSetSearch, setIsSetSearch] = useState(false);
+    const [searchData, setSearchData] = useState([]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -34,6 +42,67 @@ export function HeroSection() {
         }, 5000)
         return () => clearInterval(interval)
     }, []);
+
+    // On search type
+    useEffect(() => {
+        if (!searchValue || searchValue.length <= 2) {
+            setSearchData([]);
+            setIsStartSearch(false);
+            return;
+        }
+
+        setIsStartSearch(true);
+
+        const handler = setTimeout(async () => {
+            try {
+                setShowSuggestions(true);
+
+                const response = await fetch("/api/search", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ keyword: searchValue }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setSearchData(data?.data?.result || []);
+                    setIsSetSearch(true);
+                }
+            } catch (error) {
+                console.error("Search failed:", error);
+            } finally {
+                setIsStartSearch(false);
+            }
+        }, SEARCH_DELAY);
+
+        // Cleanup previous timer (important)
+        return () => clearTimeout(handler);
+    }, [searchValue]);
+
+    // Build search url
+    const buildSearchUrl = (item: any) => {
+        switch (item?.search_type) {
+            case "destination":
+                return `/destinations/${item.slug}`;
+
+            case "country":
+                return `/country/${item.slug}`;
+
+            case "city":
+                return `/city/${item.slug}`;
+
+            case "attraction":
+                return `/attractions/${item.slug}`;
+
+            case "tour":
+                return `/tour/${item.slug}`;
+
+            default:
+                return "#";
+        }
+    };
 
     return (
         <section className="relative h-[480px] md:h-[560px]">
@@ -67,7 +136,8 @@ export function HeroSection() {
                             />
                         </div>
                         <button className="bg-[#f53] hover:bg-[#1a2b49] text-white p-3 rounded-lg cursor-pointer hidden md:block">
-                            <Search className="h-6 w-6" />
+                            {isStartSearch && <Loader2 className="animate-spin h-6 w-6" />}
+                            {!isStartSearch && <Search className="h-6 w-6" />}
                         </button>
                     </div>
 
@@ -75,18 +145,14 @@ export function HeroSection() {
                         <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden z-50">
                             <div className="p-3 border-b border-gray-100">
                                 <span className="text-xs font-semibold text-[#1a2b49] uppercase tracking-wide">
-                                    Popular Destinations
+                                    {isSetSearch ? "Results for your search" : "Popular Destinations"}
                                 </span>
                             </div>
                             <div className="max-h-[300px] overflow-y-auto">
-                                {suggestedDestinations.map((destination) => (
+                                {!isSetSearch && searchData && searchData.length === 0 && suggestedDestinations.map((destination) => (
                                     <button
                                         key={destination.name}
                                         className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left cursor-pointer"
-                                        onClick={() => {
-                                            setSearchValue(destination.name)
-                                            setShowSuggestions(false)
-                                        }}
                                     >
                                         <img
                                             src={destination.image || "/placeholder.svg"}
@@ -99,6 +165,59 @@ export function HeroSection() {
                                         </div>
                                     </button>
                                 ))}
+
+                                {isSetSearch && searchData && searchData.length > 0 && searchData.map((item: any) => (
+                                    <Link key={item?.id} href={buildSearchUrl(item)}>
+                                        <button
+                                            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left cursor-pointer"
+                                        >
+                                            <img
+                                                src={item?.image || "/placeholder.svg"}
+                                                alt={item?.keyword}
+                                                className="w-10 h-10 rounded-lg object-cover"
+                                            />
+                                            <div>
+                                                <p className="font-medium text-sm text-gray-800">{item?.keyword}</p>
+                                                {item?.search_type === 'tour' && <>
+                                                    <div className="flex items-center gap-1">
+                                                        <p className="text-xs text-gray-500">{item?.extra}</p>
+                                                        <span className="text-gray-300">|</span>
+                                                        <p className="text-xs text-gray-500">{item?.duration}</p>
+                                                        <span className="text-gray-300">|</span>
+                                                        <p className="text-xs text-gray-500">From ${item?.price}</p>
+                                                    </div>
+                                                </>}
+                                                {item?.search_type === 'country' && <>
+                                                    <div className="flex items-center gap-1">
+                                                        <p className="text-xs text-gray-500">Country</p>
+                                                    </div>
+                                                </>}
+                                                {item?.search_type === 'attraction' && <>
+                                                    <div className="flex items-center gap-1">
+                                                        <p className="text-xs text-gray-500">Attraction</p>
+                                                    </div>
+                                                </>}
+                                                {item?.search_type === 'city' && <>
+                                                    <div className="flex items-center gap-1">
+                                                        <p className="text-xs text-gray-500">City</p>
+                                                    </div>
+                                                </>}
+                                                {item?.search_type === 'destination' && <>
+                                                    <div className="flex items-center gap-1">
+                                                        <p className="text-xs text-gray-500">Destination</p>
+                                                    </div>
+                                                </>}
+                                            </div>
+                                        </button>
+                                    </Link>
+                                ))}
+
+                                {isSetSearch && searchData && searchData.length === 0 && (
+                                    <div className="flex items-center text-center p-3">
+                                        <AlertCircleIcon className="h-4 w-4 text-gray-500 mr-2" />
+                                        <p className="text-sm text-gray-500">No results found.</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}

@@ -123,7 +123,7 @@ export default function TourDetailPage() {
                 </div>
             </div>
             <div className="max-w-7xl mx-auto px-4 md:px-8 mt-10">
-                <TourTagsList title="Explore Similar Things to Do" slug="tags" items={tourData?.tour_tags} />
+                <TourTagsList title="Explore Similar Things to Do" slug="tags" country={tourData?.tour_location?.country_slug} items={tourData?.tour_tags} />
                 <TourTagsList title="Related Attractions" slug="attractions" items={tourData?.tour_attractions} />
             </div>
             <Footer />
